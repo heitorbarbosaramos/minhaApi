@@ -5,7 +5,7 @@ import com.sisweb.api.entity.dto.UsuarioPerfilDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {UsuarioPerfil.class, UsuarioPerfilDTO.class})
-public interface UsuarioMapper {
+public interface UsuarioPerfilMapper {
 
     UsuarioPerfil toEntity(UsuarioPerfilDTO dto);
 

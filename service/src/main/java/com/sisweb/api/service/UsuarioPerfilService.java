@@ -2,7 +2,7 @@ package com.sisweb.api.service;
 
 import com.sisweb.api.entity.UsuarioPerfil;
 import com.sisweb.api.entity.dto.UsuarioPerfilDTO;
-import com.sisweb.api.mapper.UsuarioMapper;
+import com.sisweb.api.mapper.UsuarioPerfilMapper;
 import com.sisweb.api.repository.UsuarioPerfilRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,7 @@ public class UsuarioPerfilService {
 
     private final UsuarioPerfilRepository repository;
 
-    private final UsuarioMapper mapper;
+    private final UsuarioPerfilMapper mapper;
 
     public UsuarioPerfilDTO save (UsuarioPerfilDTO dto){
 
