@@ -1,1 +1,0 @@
-ALTER TABLE tb_usuario ADD ID_ENDERECO bigint NULL;
