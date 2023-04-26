@@ -1,7 +1,7 @@
 package com.sisweb.api.service;
 
 import com.sisweb.api.entity.UsuarioPerfil;
-import com.sisweb.api.entity.perfil.UsuarioPerfilDTO;
+import com.sisweb.api.entity.dto.UsuarioPerfilDTO;
 import com.sisweb.api.mapper.UsuarioMapper;
 import com.sisweb.api.repository.UsuarioPerfilRepository;
 import lombok.RequiredArgsConstructor;

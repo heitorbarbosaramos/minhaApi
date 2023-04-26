@@ -1,4 +1,4 @@
-package com.sisweb.api.entity.perfil;
+package com.sisweb.api.entity.dto;
 
 import com.sisweb.api.enumeration.Perfil;
 import lombok.Getter;

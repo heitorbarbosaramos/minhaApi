@@ -1,6 +1,6 @@
 package com.sisweb.api.web.rest;
 
-import com.sisweb.api.entity.perfil.UsuarioPerfilDTO;
+import com.sisweb.api.entity.dto.UsuarioPerfilDTO;
 import com.sisweb.api.service.UsuarioPerfilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
