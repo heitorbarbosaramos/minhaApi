@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ public class Usuario {
     @NotEmpty(message = "Campo obrigatório")
     private String senha;
 
+    @NotNull(message = "Campo obrigatório")
     @ManyToMany
     @JoinTable(name = "TB_USUARIO_ROLES", joinColumns = @JoinColumn(name = "ID_USUARIO"), inverseJoinColumns = @JoinColumn(name = "ID_PERFIL"))
     private Set<UsuarioPerfil> perfis = new HashSet<>();
