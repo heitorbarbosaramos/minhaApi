@@ -1,28 +1,26 @@
 package com.sisweb.api.entity.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sisweb.api.entity.Endereco;
+import com.sisweb.api.entity.UsuarioPerfil;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
-public class UsuarioFormDTO {
+public class UsuarioDTO {
 
     private Long id;
-    @NotEmpty(message = "Campo obrigatório")
     private String login;
-    @NotEmpty(message = "Campo obrigatório")
+    @JsonIgnore
     private String senha;
-    @NotEmpty(message = "Campo obrigatório")
     private String nome;
-    @NotNull(message = "Campo obrigatório")
     private Boolean ativo;
-    @NotNull(message = "Campo obrigatório")
-    private Set<Long> idsPerfis = new HashSet<>();
+
+    private Set<UsuarioPerfil> perfis = new HashSet<>();
     private Endereco endereco;
 }

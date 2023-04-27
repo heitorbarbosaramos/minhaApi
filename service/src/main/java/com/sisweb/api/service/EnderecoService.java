@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EnderecoService {
 
-    private EnderecoRepository repository;
+    private final EnderecoRepository repository;
     private final EnderecoCliente enderecoCliente;
 
     public Endereco buscarPorCep(String cep){

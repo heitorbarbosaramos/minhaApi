@@ -24,13 +24,17 @@ public class Usuario {
     private String login;
     @NotEmpty(message = "Campo obrigatório")
     private String senha;
+    @NotEmpty(message = "Campo obrigatório")
+    private String nome;
+    @NotNull(message = "Campo obrigatório")
+    private Boolean ativo;
 
     @NotNull(message = "Campo obrigatório")
     @ManyToMany
     @JoinTable(name = "TB_USUARIO_ROLES", joinColumns = @JoinColumn(name = "ID_USUARIO"), inverseJoinColumns = @JoinColumn(name = "ID_PERFIL"))
     private Set<UsuarioPerfil> perfis = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_ENDERECO")
     private Endereco endereco;
 }
