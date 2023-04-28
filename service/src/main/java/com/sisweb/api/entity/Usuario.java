@@ -30,7 +30,7 @@ public class Usuario {
     private Boolean ativo;
 
     @NotNull(message = "Campo obrigatório")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "TB_USUARIO_ROLES", joinColumns = @JoinColumn(name = "ID_USUARIO"), inverseJoinColumns = @JoinColumn(name = "ID_PERFIL"))
     private Set<UsuarioPerfil> perfis = new HashSet<>();
 

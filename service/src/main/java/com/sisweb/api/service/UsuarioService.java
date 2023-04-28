@@ -34,6 +34,10 @@ public class UsuarioService {
         return repository.findById(id).orElseThrow(() -> new NoSuchElementException("Usuario não encontrado"));
     }
 
+    public Usuario findByLogin(String login) {
+        return repository.findByLogin(login);
+    }
+
     @Transactional
     public UsuarioDTO createUpdate(UsuarioFormDTO dto){
         Endereco endereco = enderecoService.save(dto.getEndereco());

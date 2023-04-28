@@ -1,5 +1,6 @@
 package com.sisweb.api.exceptions;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -206,6 +207,23 @@ public class ResourcesExceptionsHandler {
     public ResponseEntity<MensagemPadrao> runtimeException(RuntimeException e, HttpServletRequest request){
 
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        MensagemPadrao obj = new MensagemPadrao();
+        obj.setIdStatus(httpStatus.value());
+        obj.setCausa(httpStatus.toString());
+        obj.setMensagem(e.getMessage());
+        obj.setPath(request.getContextPath() + request.getServletPath());
+        obj.setData(LocalDateTime.now());
+
+        e.printStackTrace();
+
+        return  ResponseEntity.status(httpStatus).body(obj);
+    }
+
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<MensagemPadrao> jwtVerificationException(JWTVerificationException e, HttpServletRequest request){
+
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
         MensagemPadrao obj = new MensagemPadrao();
         obj.setIdStatus(httpStatus.value());

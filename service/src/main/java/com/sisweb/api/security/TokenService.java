@@ -3,6 +3,7 @@ package com.sisweb.api.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,27 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("Minha Api")
                     .withSubject(usuario.getLogin())
-                    .withExpiresAt(LocalDateTime.now().plusHours(expiracao).toInstant(ZoneOffset.of("-03:00")))
+                    .withExpiresAt(LocalDateTime.now().plusDays(expiracao).toInstant(ZoneOffset.of("-03:00")))
                     .withClaim("id", usuario.getId().toString())
                     .sign(algorithm);
         } catch (JWTCreationException e){
             throw  new RuntimeException("Erro ao criar o token ", e);
+        }
+    }
+
+    public String getSubject(String tokenJWT){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secreto);
+            return JWT.require(algorithm)
+                    // specify an specific claim validations
+                    .withIssuer("Minha Api")
+                    // reusable verifier instance
+                    .build()
+                    .verify(tokenJWT)
+                    .getSubject();
+
+        } catch (JWTVerificationException exception){
+            throw new JWTVerificationException("Token inválido ou expirado");
         }
     }
 }
