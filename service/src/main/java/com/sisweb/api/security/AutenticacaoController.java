@@ -25,8 +25,8 @@ public class AutenticacaoController {
     public ResponseEntity efetuarLogin(@RequestBody @Valid LoginDTO dto){
         log.info("REQUISICAO POST PARA REALIZAR LOGIN {} {}", dto.getLogin(), dto.getSenha());
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getLogin());
-        Authentication authentication = manager.authenticate(authToken);
+        var authenticationToken = new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getSenha());
+        var authentication = manager.authenticate(authenticationToken);
 
         return ResponseEntity.ok("OK-LOGOU");
     }
