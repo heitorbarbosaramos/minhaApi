@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.jdbc.UncategorizedSQLException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -239,6 +240,23 @@ public class ResourcesExceptionsHandler {
     public ResponseEntity<MensagemPadrao> illegalStateException(IllegalStateException e, HttpServletRequest request){
 
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        MensagemPadrao obj = new MensagemPadrao();
+        obj.setIdStatus(httpStatus.value());
+        obj.setCausa(httpStatus.toString());
+        obj.setMensagem(e.getMessage());
+        obj.setPath(request.getContextPath() + request.getServletPath());
+        obj.setData(LocalDateTime.now());
+
+        e.printStackTrace();
+
+        return  ResponseEntity.status(httpStatus).body(obj);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<MensagemPadrao> httpMessageNotReadableException(BadCredentialsException e, HttpServletRequest request){
+
+        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
 
         MensagemPadrao obj = new MensagemPadrao();
         obj.setIdStatus(httpStatus.value());
