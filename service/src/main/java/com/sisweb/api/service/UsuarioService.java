@@ -9,6 +9,7 @@ import com.sisweb.api.mapper.UsuarioMapper;
 import com.sisweb.api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,8 @@ public class UsuarioService {
 
         Set<UsuarioPerfil> perfis = new HashSet<>();
         perfis = dto.getIdsPerfis().stream().map(item -> perfilService.findById(item)).collect(Collectors.toSet());
+
+        dto.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
 
         Usuario usuario = mapper.fromFormDTO(dto);
         usuario.setPerfis(perfis);
