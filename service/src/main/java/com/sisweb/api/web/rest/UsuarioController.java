@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,6 +23,7 @@ public class UsuarioController {
     private final UsuarioService service;
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<UsuarioDTO> save(@RequestBody @Valid UsuarioFormDTO dto){
         log.info("REQUISICAO POST PARA CRIAR OU ATUALIZAR USUARIO");
         UsuarioDTO createUpdate = service.createUpdate(dto);
@@ -36,6 +38,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/ListaFiltro")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Page<UsuarioDTO>> listarFiltra(
             @RequestBody UsuarioDTO dto,
             @RequestParam(name = "page",         defaultValue = "0")    Integer page,

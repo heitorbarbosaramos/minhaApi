@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,6 +21,7 @@ public class UsuarioPerfilController {
     private final UsuarioPerfilService service;
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<UsuarioPerfilDTO> save(@RequestBody UsuarioPerfilDTO dto){
         log.info("REQUISICAO POST PARA SALVAR UM PERFIL");
         dto = service.save(dto);
