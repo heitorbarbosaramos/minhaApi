@@ -11,3 +11,28 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.page{
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.corpo{
+  display: flex;
+}
+
+.cor_menu{
+  background-color: #1f1e1e;
+}
+
+.cor_header{
+  background-color: #ffffff;
+}
+
+.cor_fundo{
+  background-color: #ececec;
+}
+
+.cor_conteudo{
+  background-color: #ffffff;
+}
