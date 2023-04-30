@@ -27,4 +27,5 @@ public class UsuarioFormDTO {
     @NotNull(message = "Campo obrigatório")
     private Set<Long> idsPerfis = new HashSet<>();
     private Endereco endereco;
+    Set<String> fone = new HashSet<>();
 }

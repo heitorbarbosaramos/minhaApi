@@ -6,7 +6,6 @@ import com.sisweb.api.entity.UsuarioPerfil;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,4 +22,5 @@ public class UsuarioDTO {
 
     private Set<UsuarioPerfil> perfis = new HashSet<>();
     private Endereco endereco;
+    Set<String> fone = new HashSet<>();
 }

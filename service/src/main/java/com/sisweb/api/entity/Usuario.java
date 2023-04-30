@@ -37,4 +37,8 @@ public class Usuario {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_ENDERECO")
     private Endereco endereco;
+    
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "USUARIO_TELEFONE")
+    Set<String> fone = new HashSet<>();
 }

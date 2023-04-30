@@ -224,7 +224,7 @@ public class ResourcesExceptionsHandler {
     @ExceptionHandler(JWTVerificationException.class)
     public ResponseEntity<MensagemPadrao> jwtVerificationException(JWTVerificationException e, HttpServletRequest request){
 
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
 
         MensagemPadrao obj = new MensagemPadrao();
         obj.setIdStatus(httpStatus.value());
