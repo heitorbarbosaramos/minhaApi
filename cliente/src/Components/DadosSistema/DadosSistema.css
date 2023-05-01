@@ -1,0 +1,9 @@
+.dadosSistema{
+    font-size: 0.6rem;
+    text-align: center;
+    color: #8b949c;
+}
+
+.dadosSistema p{
+    margin: 10px;
+}

@@ -10,8 +10,8 @@ root.render(
   <div className='corpo'>
     <React.StrictMode>
       <BrowserRouter>
-        <Menu />
-        <Content />
+          <Menu />
+          <Content />
       </BrowserRouter>
     </React.StrictMode>
   </div>
