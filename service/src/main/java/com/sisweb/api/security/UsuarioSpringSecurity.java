@@ -1,6 +1,7 @@
 package com.sisweb.api.security;
 
 import com.sisweb.api.entity.UsuarioPerfil;
+import com.sisweb.api.enumeration.Perfil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -77,5 +78,11 @@ public class UsuarioSpringSecurity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return ativo;
+    }
+
+    public boolean temPerfil(Perfil perfil) {
+
+        return getAuthorities().contains(new SimpleGrantedAuthority(perfil.name())) ? true : false;
+
     }
 }

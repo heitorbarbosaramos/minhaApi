@@ -5,10 +5,14 @@ import com.sisweb.api.entity.Usuario;
 import com.sisweb.api.entity.UsuarioPerfil;
 import com.sisweb.api.entity.dto.UsuarioDTO;
 import com.sisweb.api.entity.dto.UsuarioFormDTO;
+import com.sisweb.api.enumeration.Perfil;
 import com.sisweb.api.mapper.UsuarioMapper;
 import com.sisweb.api.repository.UsuarioRepository;
+import com.sisweb.api.security.UsuarioLogado;
+import com.sisweb.api.security.UsuarioSpringSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +36,23 @@ public class UsuarioService {
     }
 
     public Usuario findById(Long id){
+
+        UsuarioSpringSecurity uss = UsuarioLogado.usuarioLogado();
+
+        if(uss == null || !uss.temPerfil(Perfil.ROLE_ADMIN) && !uss.getId().equals(id)){
+            throw new AuthorizationServiceException("Acesso negado");
+        }
         return repository.findById(id).orElseThrow(() -> new NoSuchElementException("Usuario não encontrado"));
     }
 
     public Usuario findByLogin(String login) {
+
+        UsuarioSpringSecurity uss = UsuarioLogado.usuarioLogado();
+
+        if(uss == null || !uss.temPerfil(Perfil.ROLE_ADMIN) && !uss.getLogin().equals(login)){
+            throw new AuthorizationServiceException("Acesso negado");
+        }
+
         return repository.findByLogin(login);
     }
 
