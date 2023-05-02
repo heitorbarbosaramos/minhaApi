@@ -1,0 +1,12 @@
+.dados{
+    padding-top: 80px;
+    color: #858383;
+    text-align: center;
+    align-content: center;
+}
+
+.dados hr{
+    width: 80%;
+    position: relative;
+    margin-left: 10%;
+}

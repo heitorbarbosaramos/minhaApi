@@ -44,6 +44,9 @@ export const AuthProvider = ({ children }) => {
                 token: response.data.tokenJWT,
             }
 
+            localStorage.setItem("myApiLogin", JSON.stringify(response.data.login).replaceAll("\"", ""))
+            localStorage.setItem("myApiNome", JSON.stringify(response.data.nome).replaceAll("\"", ""))
+            localStorage.setItem("myApiPerfis", JSON.stringify(response.data.perfis).replaceAll("\"", ""))
             localStorage.setItem("myToken", JSON.stringify(LoggedUser))
 
             setUser(LoggedUser);
@@ -61,6 +64,9 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         logado = false;
         console.log("LOGOUT");
+        localStorage.removeItem("myApiLogin")
+        localStorage.removeItem("myApiNome")
+        localStorage.removeItem("myApiPerfis")
         localStorage.removeItem("myToken");
         setUser(null);
         navigate("/login?logout")

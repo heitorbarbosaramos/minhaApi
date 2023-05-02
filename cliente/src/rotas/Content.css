@@ -1,8 +1,10 @@
 .menu{
     display: flex;
+    flex-direction: column;
     width: 15vw;
     margin: 0;
     height: 100vh;
+    overflow: hidden;
   }
   
   .menu nav{

@@ -8,6 +8,7 @@ import "./Content.css";
 import Headers from "../componentes/Headers/Headers.jsx"
 import DadosSistema from "../componentes/DadosSistema/DadosSistema.jsx"
 import Icone from "../componentes/Icone/Icone.jsx"
+import DadosResumidoMenu from "../componentes/Usuario/DadosResumidoMenu.jsx"
 
 const Content = () => {
 
@@ -44,10 +45,12 @@ const Content = () => {
 
             <main className="content">
 
-
                 <aside className={oculta ? "oculta" : "menu cor_menu"}>
 
+                    <DadosResumidoMenu />
+                    
                     <nav>
+                    
                         <ul>
                             <li><Link to="/"><Icone icone="cottage" /> HOME</Link></li>
                             <li><Link to="page1"><Icone icone="arrow_forward" /> PAGINA 1</Link></li>
