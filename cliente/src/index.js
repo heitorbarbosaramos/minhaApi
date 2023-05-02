@@ -1,18 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter } from 'react-router-dom';
-import Menu from './navegacao/Menu';
-import Content from './navegacao/Content';
+import App from './App';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <div className='corpo'>
     <React.StrictMode>
-      <BrowserRouter>
-          <Menu />
-          <Content />
-      </BrowserRouter>
+      <App />
     </React.StrictMode>
   </div>
 );

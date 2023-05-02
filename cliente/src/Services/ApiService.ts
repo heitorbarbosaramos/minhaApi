@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 let baseURL: any;
 
 switch(window.location.origin){
@@ -9,8 +8,8 @@ switch(window.location.origin){
         break;
 }
 
-const Api = axios.create({
+const ApiService = axios.create({
     baseURL
 });
 
-export default Api
+export default ApiService

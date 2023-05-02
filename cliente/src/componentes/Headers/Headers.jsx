@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import './Headers.css'
-import { AuthContext } from '../../services/Auth'
+import { AuthContext } from '../../Services/Auth'
 const Headers = () =>{
 
     const {  logout } = useContext(AuthContext)

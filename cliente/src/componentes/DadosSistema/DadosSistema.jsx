@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Api from "../../services/Api.ts";
 import "./DadosSistema.css";
+import ApiService from "../../Services/ApiService.ts";
 
 const DadosSistema = () =>{
 
@@ -9,7 +9,7 @@ const DadosSistema = () =>{
 
     useEffect(() => {
         
-        Api.get("/rest/actuator/info").then(response => {
+        ApiService.get("/rest/actuator/info").then(response => {
             console.log(response);
             setNomeApi(response.data.app.name);
             setVersao(response.data.app.version);
