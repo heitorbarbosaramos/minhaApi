@@ -1,6 +1,6 @@
 package com.sisweb.api.security;
 
-import com.sisweb.api.service.UsuarioService;
+import com.sisweb.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     private TokenService tokenService;
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuarioRepository usuarioRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -28,7 +28,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(tokenJWT != null){
             var subjet = tokenService.getSubject(tokenJWT);
-            var usuario = usuarioService.findByLogin(subjet);
+            var usuario = usuarioRepository.findByLogin(subjet);
 
             var uss = new UsuarioSpringSecurity(usuario.getId(), usuario.getLogin(), usuario.getSenha(), usuario.getNome(), usuario.getAtivo(), usuario.getPerfis());
             var authentication = new UsernamePasswordAuthenticationToken(uss, null, uss.getAuthorities());
