@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,8 +28,11 @@ public class AutenticacaoController {
     private AuthenticationManager manager;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private CookieService cookieService;
+
     @PostMapping
-    public ResponseEntity efetuarLogin(@RequestBody @Valid LoginDTO dto){
+    public ResponseEntity efetuarLogin(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid LoginDTO dto){
         log.info("REQUISICAO POST PARA REALIZAR LOGIN {} {}", dto.getLogin(), dto.getSenha());
 
         var authenticationToken = new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getSenha());
@@ -42,7 +47,9 @@ public class AutenticacaoController {
         for(GrantedAuthority x : ((UsuarioSpringSecurity) authentication.getPrincipal()).getAuthorities()){
             perfis.add(x.getAuthority());
         }
-        
+
+        cookieService.createCookiePerfil(request, response, perfis);
+
         DadosTokenJWT dadosTokenJWT = new DadosTokenJWT(
                 tokenJWT,
                 ((UsuarioSpringSecurity) authentication.getPrincipal()).getLogin(),
