@@ -31,6 +31,12 @@ public class UsuarioController {
         return ResponseEntity.created(uri).body(createUpdate);
     }
 
+    @GetMapping("/findlogin/{login}")
+    public ResponseEntity<UsuarioDTO> findByLogin(@PathVariable String login){
+        log.info("REQUISICAO GET PARA BUSCAR USUARIO POR LOGIN");
+        return ResponseEntity.ok(service.findByLogin(login));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> findById(@PathVariable("id") Long id){
         log.info("REQUISICAO GET PARA RESGATAR USUARIO POR ID");
@@ -45,7 +51,7 @@ public class UsuarioController {
             @RequestParam(name = "linesPerPage", defaultValue = "10")   Integer linesPerPage,
             @RequestParam(name = "orderBy",      defaultValue = "nome") String orderBy,
             @RequestParam(name = "direction",    defaultValue = "ASC")  String direction){
-        log.info("REQUISICAO POST PARA FILTRAR E LISTA USUARIOS");
+        log.info("REQUISICAO POST PARA FILTRAR E LISTA USUARIOS {}", dto.getLogin());
         return ResponseEntity.ok(service.usuarioFiltro(dto, page, linesPerPage, orderBy, direction));
     }
 }

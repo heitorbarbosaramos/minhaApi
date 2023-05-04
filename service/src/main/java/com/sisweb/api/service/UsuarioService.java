@@ -45,7 +45,7 @@ public class UsuarioService {
         return repository.findById(id).orElseThrow(() -> new NoSuchElementException("Usuario não encontrado"));
     }
 
-    public Usuario findByLogin(String login) {
+    public UsuarioDTO findByLogin(String login) {
 
         UsuarioSpringSecurity uss = UsuarioLogado.usuarioLogado();
 
@@ -53,7 +53,13 @@ public class UsuarioService {
             throw new AuthorizationServiceException("Acesso negado");
         }
 
-        return repository.findByLogin(login);
+        Usuario usuario = repository.findByLogin(login);
+        if(usuario == null){
+            throw new NoSuchElementException("Login não existe");
+        }
+        UsuarioDTO dto = mapper.toDTO(usuario);
+
+        return dto;
     }
 
     @Transactional
@@ -84,6 +90,7 @@ public class UsuarioService {
         Usuario usuario = mapper.toEntity(dto);
 
         ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("id",                   ExampleMatcher.GenericPropertyMatchers.startsWith())
                 .withMatcher("login",                ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("nome",                 ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("endereco.id",          ExampleMatcher.GenericPropertyMatchers.contains())
