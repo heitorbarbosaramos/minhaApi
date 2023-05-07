@@ -18,7 +18,7 @@ const MenuLateral = () => {
                     <ul className={ocultaUsuario ? "oculta" : "submenu"}>
                         <li><Link to="usuario"><Icone icone="browse_activity" />Geral</Link></li>
                         <li><Link to="usuarioListar"><Icone icone="switch_account" />Listar usuários</Link></li>
-                        <li><Link to="formularioIsuario"><Icone icone="assignment" />Formulario usuários</Link></li>
+                        <li><Link to="formularioIsuario/0"><Icone icone="assignment" />Formulario usuários</Link></li>
                     </ul>
                 </li>
                 <li><Link to="page1"><Icone icone="arrow_forward" /> PAGINA 1</Link></li>

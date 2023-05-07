@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react"
 import { IMaskInput } from 'react-imask';
 import { Form } from "react-bootstrap"
@@ -8,6 +9,8 @@ import { Endereco } from "../../models/Endereco.ts";
 import ToastError from "../Toast/ToastError.jsx";
 import ToastSucess from "../Toast/ToastSucess.jsx";
 import ToastWornig from "../Toast/ToastWarning.jsx";
+import { useParams } from "react-router-dom";
+import ToastInfo from "../Toast/ToastInfo.jsx";
 
 function addTell(setFone, fones, novoFone){
     setFone([novoFone, ...fones]);
@@ -27,12 +30,23 @@ function checkPerfis(setIdsPerfis, idsPerfis, novoPerfil){
 
 const FormularioUsuario = () => {
 
+    const { idUsuario } = useParams();
+
+    const [showToastError, setShowToastError] = useState(false);
+    const [showToastSucess, setShowToastSucess] = useState(false);
+    const [showToastWarning, setShowToastWarning] = useState(false);
+    const [showToastInfo, setShowToastInfo] = useState(false);
+    const [mensagemToast, setMensagemToast] = useState("Erro");
+
     const [usuarioDTO, setUsuarioDTO] = useState(new UsuarioDTO());
     const [endereco, setEndereco] = useState(new Endereco());
+   
+    console.log("CONFERE USUARIO DTO: ", usuarioDTO);
+
 
     const [ativo, setAtivo] = useState(true);
     const [idUser, setIdUser] = useState(null);
-    const [nome, setNome] = useState("");
+    const [nome, setNome] = useState(null);
     const [login, setLogin] = useState("");
     const [senha, setSenha] = useState("");
     const [fones, setFone] = useState([]);
@@ -54,10 +68,54 @@ const FormularioUsuario = () => {
 
     const [loingExiste, setLoginExiste] = useState(false);
 
-    const [showToastError, setShowToastError] = useState(false);
-    const [showToastSucess, setShowToastSucess] = useState(false);
-    const [showToastWarning, setShowToastWarning] = useState(false);
-    const [mensagemToast, setMensagemToast] = useState("Erro");
+    if(idUsuario > 0){
+
+        console.log("PARAMETROS: ", idUsuario);
+  
+        useEffect(() => {
+
+            ApiService.get(`/rest/usuario/${idUsuario}`).then((response) =>{
+                
+                console.log("USUARIO LOCALIZADO: ", response)
+
+                setIdUser(response.data.id);
+                setNome(response.data.nome);
+                setAtivo(response.data.ativo);
+                setLogin(response.data.login);
+                setFone(response.data.fone);
+
+                let idsPerfilRecuperado = [];
+                for(let i = 0; i<response.data.perfis.length; i++){
+                    console.log("PERFIS RECUPERADOS: ", response.data.perfis[i].id, response.data.perfis[i].nome)
+                    idsPerfilRecuperado.push(response.data.perfis[i].id);
+                }
+                setIdsPerfis(idsPerfilRecuperado);
+
+                setIdEndereco(response.data.endereco.id);
+                setBairro(response.data.endereco.bairro);
+                setCep(response.data.endereco.cep);
+                setComplemento(response.data.endereco.complemento);
+                setEndereco(response.data.endereco.ddd);
+                setGia(response.data.endereco.gia);
+                setIbge(response.data.endereco.ibge);
+                setLocalidade(response.data.endereco.localidade);
+                setLogradouro(response.data.endereco.logradouro);
+                setNumero(response.data.endereco.numero);
+                setUf(response.data.endereco.uf);
+                
+                setShowToastInfo(true);
+                setMensagemToast("Usuário localizado com sucesso")
+            }).catch(error => {
+                console.log(error)
+                setShowToastError(true);
+                setMensagemToast(error.response.data.mensagem)
+                limpaForm();
+            })
+
+        },[idUsuario]);
+       
+
+    }
 
     function limpaForm(){
         setUsuarioDTO(new UsuarioDTO());
@@ -83,11 +141,13 @@ const FormularioUsuario = () => {
         setIbge("");
         setGia("");
 
+        console.log("FORMULARIO LIMPO")
+
     }
 
     function salvarForm(e){
         e.preventDefault();
-        console.log("SALVAR USUARIO");
+        console.log("SALVAR USUARIO", idEndereco, cep);
 
         endereco.id = idEndereco;
         endereco.cep = cep;
@@ -101,7 +161,7 @@ const FormularioUsuario = () => {
         endereco.ibge = ibge;
         endereco.gia = gia;
 
-        usuarioDTO.id = idUser;
+        usuarioDTO.id = parseInt(idUser);
         usuarioDTO.login = login;
         usuarioDTO.nome = nome;
         usuarioDTO.senha = senha;
@@ -148,7 +208,6 @@ const FormularioUsuario = () => {
 
     }, [])
     
-
     useEffect(() => {
         ApiService.get(`/rest/endereco/${cep}`).then(response => {
             setLogradouro(response.data.logradouro);
@@ -264,7 +323,7 @@ const FormularioUsuario = () => {
                             listaPerfis.map((item) => {
                                 return(
                                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                        <Form.Check type="checkbox" label={item.nome} value={item.id} onClick={(e) =>{checkPerfis(setIdsPerfis, idsPerfis, e.target.value)}} />  
+                                        <Form.Check type="checkbox" checked={idsPerfis.indexOf(item.id) >= 0 ? true : false} label={item.nome} value={item.id} onClick={(e) =>{checkPerfis(setIdsPerfis, idsPerfis, e.target.value)}} />  
                                     </Form.Group>
                                 )
                             })
@@ -274,7 +333,7 @@ const FormularioUsuario = () => {
                     <div className="mb-3" style={{width:"12%"}}>
                     <Form.Group className="mb-3">
                         <Form.Label>Usuário ativo:</Form.Label>
-                        <Form.Check  type="switch" id="custom-switch" label={ativo === true ? "Ativo" : "Inativo"} value={true} onChange={(e) => {console.log(e)}} />
+                        <Form.Check  type="switch" id="custom-switch" checked={ativo} label={ativo === true ? "Ativo" : "Inativo"} value={true} onChange={(e) => {setAtivo(!ativo); console.log(e)}} />
                     </Form.Group>
 
                     </div>
@@ -310,6 +369,7 @@ const FormularioUsuario = () => {
          <ToastError mensagem={mensagemToast} show={showToastError} setShow={setShowToastError} />
          <ToastSucess mensagem={mensagemToast} show={showToastSucess} setShow={setShowToastSucess} />
          <ToastWornig mensagem={mensagemToast} show={showToastWarning} setShow={setShowToastWarning} />
+         <ToastInfo mensagem={mensagemToast} show={showToastInfo} setShow={setShowToastInfo} />
         </div>
     )
 }

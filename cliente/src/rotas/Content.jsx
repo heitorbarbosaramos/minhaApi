@@ -73,7 +73,7 @@ const Content = () => {
                             <Route path="login" element={<Login />} />
                             <Route path="usuario" element={<Private><Usuario /></Private>} />
                             <Route path="usuarioListar" element={<Private><ListarUsuario /></Private>} />
-                            <Route path="formularioIsuario" element={<Private><FormularioUsuario /></Private>} />
+                            <Route path="formularioIsuario/:idUsuario" element={<Private><FormularioUsuario /></Private>} />
                             
 
                         </Routes>

@@ -5,6 +5,7 @@ import { Button, Form, InputGroup, Table } from "react-bootstrap";
 import Icone from "../Icone/Icone.jsx";
 import { UsuarioDTO } from "../../models/UsuarioDTO.ts";
 import Paginador from "../TablePagination/TablePaginations.jsx";
+import { Link } from "react-router-dom";
 
 const ListarUsuario = () => {
 
@@ -16,7 +17,7 @@ const ListarUsuario = () => {
 
     const [usuarioDto] = useState(new UsuarioDTO(""));
 
-    const [filtroId, setFiltroID] = useState("");
+    const [filtroId] = useState("");
     const [filtroLogin, setFiltroLogin] = useState("");
     const [filtroNome, setFiltroNome] = useState("");
     const [filtroAtivo, setFiltroAtivo] = useState();
@@ -99,9 +100,11 @@ const ListarUsuario = () => {
                                     <td>{api.nome}</td>
                                     <td>{api.ativo === true ? <Icone icone="done" cor="cor_certo" /> : <Icone icone="block" cor="cor_erro" />}</td>
                                     <td>
-                                        <Button variant="primary" size="sm">
-                                            <Icone icone="manage_accounts" />
-                                        </Button>
+                                        <Link to={`/formularioIsuario/${api.id}`}>
+                                            <Button variant="primary" size="sm">
+                                                <Icone icone="manage_accounts" />
+                                            </Button>
+                                        </Link>
                                     </td>
                                 </tr>
                             )

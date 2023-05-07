@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { LoginDTO } from "../models/LoginDTO.ts";
 import ApiService from "./ApiService.ts";
+import ToastError from "../componentes/Toast/ToastError.jsx";
 
 export const AuthContext = createContext();
 
