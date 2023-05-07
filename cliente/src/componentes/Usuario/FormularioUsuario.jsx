@@ -258,7 +258,7 @@ const FormularioUsuario = () => {
                 </div>
 
                 <div className="row">
-                    <div className="mb-3" style={{width:"20%"}}>
+                    <div className="mb-3" style={{width:"15%"}}>
                         Perfis:
                         {listaPerfis && (
                             listaPerfis.map((item) => {
@@ -270,6 +270,15 @@ const FormularioUsuario = () => {
                             })
                         )}
                     </div>
+
+                    <div className="mb-3" style={{width:"12%"}}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Usuário ativo:</Form.Label>
+                        <Form.Check  type="switch" id="custom-switch" label={ativo === true ? "Ativo" : "Inativo"} value={true} onChange={(e) => {console.log(e)}} />
+                    </Form.Group>
+
+                    </div>
+
                     <div className="mb-3" style={{width:"16%"}}>                        
                         <Form.Group className="mb-3">
                             <Form.Label>telefones:</Form.Label>

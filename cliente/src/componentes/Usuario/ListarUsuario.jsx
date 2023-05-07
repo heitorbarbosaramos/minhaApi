@@ -51,32 +51,6 @@ const ListarUsuario = () => {
                     <tr>
                         <th>
                             <span className="cursor_ponter" onClick={() => {
-                                setOrderBy("id");
-                                setDirection(direction === "ASC" ? "DESC" : "ASC")
-                            }}>ID</span>
-                            <InputGroup style={{ width: '5rem' }}>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="ID"
-                                    onChange={(e) => setFiltroID(e.target.value)}
-                                />
-                            </InputGroup>
-                        </th>
-                        <th>
-                            <span className="cursor_ponter" onClick={() => {
-                                setOrderBy("ativo");
-                                setDirection(direction === "ASC" ? "DESC" : "ASC")
-                            }}>Ativo</span>
-                            <Form.Select aria-label="Default select example" style={{ width: '8rem' }}
-                                onChange={(e) => setFiltroAtivo(e.target.value)}
-                            >
-                                <option></option>
-                                <option value="true">Ativo</option>
-                                <option value="false">Desativado</option>
-                            </Form.Select>
-                        </th>
-                        <th>
-                            <span className="cursor_ponter" onClick={() => {
                                 setOrderBy("login");
                                 setDirection(direction === "ASC" ? "DESC" : "ASC")
                             }}>Login</span>
@@ -99,6 +73,19 @@ const ListarUsuario = () => {
                                 />
                             </InputGroup>
                         </th>
+                        <th>
+                            <span className="cursor_ponter" onClick={() => {
+                                setOrderBy("ativo");
+                                setDirection(direction === "ASC" ? "DESC" : "ASC")
+                            }}>Ativo</span>
+                            <Form.Select aria-label="Default select example" style={{ width: '8rem' }}
+                                onChange={(e) => setFiltroAtivo(e.target.value)}
+                            >
+                                <option></option>
+                                <option value="true">Ativo</option>
+                                <option value="false">Desativado</option>
+                            </Form.Select>
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -108,10 +95,9 @@ const ListarUsuario = () => {
                         {dadosUsuario.content.map((api) => {
                             return (
                                 <tr key={api.id}>
-                                    <td>{api.id}</td>
-                                    <td>{api.ativo === true ? <Icone icone="done" cor="cor_certo" /> : <Icone icone="block" cor="cor_erro" />}</td>
                                     <td>{api.login}</td>
                                     <td>{api.nome}</td>
+                                    <td>{api.ativo === true ? <Icone icone="done" cor="cor_certo" /> : <Icone icone="block" cor="cor_erro" />}</td>
                                     <td>
                                         <Button variant="primary" size="sm">
                                             <Icone icone="manage_accounts" />
