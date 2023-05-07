@@ -9,7 +9,7 @@ import DadosSistema from '../../componentes/DadosSistema/DadosSistema';
 
 const Login = () => {
 
-    const { login, authenticated } = useContext(AuthContext);
+    const { login } = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
@@ -34,7 +34,6 @@ const Login = () => {
 
                     <Card.Header as="h5">Login Sistema</Card.Header>
                     <Card.Title>Bem vindo</Card.Title>
-                    {String(authenticated)}
 
                     <Form onSubmit={loginSubmit} style={{ padding: "10px" }}>
 

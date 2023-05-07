@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem("myApiLogin", JSON.stringify(response.data.login).replaceAll("\"", ""))
             localStorage.setItem("myApiNome", JSON.stringify(response.data.nome).replaceAll("\"", ""))
             localStorage.setItem("myApiPerfis", JSON.stringify(response.data.perfis).replaceAll("\"", ""))
+            localStorage.setItem("myApiToken", JSON.stringify(response.data.tokenJWT).replaceAll("\"", ""))
             localStorage.setItem("myToken", JSON.stringify(LoggedUser))
 
             setUser(LoggedUser);
@@ -67,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("myApiLogin")
         localStorage.removeItem("myApiNome")
         localStorage.removeItem("myApiPerfis")
+        localStorage.removeItem("myApiToken");
         localStorage.removeItem("myToken");
         setUser(null);
         navigate("/login?logout")

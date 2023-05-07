@@ -12,8 +12,30 @@ code {
     monospace;
 }
 
+.border{
+  border: solid #dee2e6;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.cursor_ponter{
+  cursor: pointer;
+}
+
 .corpo{
   display: flex;
+}
+
+.cor_erro{
+  color: #cf0a0a;
+}
+
+.cor_certo{
+  color: #283075;
+}
+
+.cor_padrao{
+  color: #1f1e1e;
 }
 
 .cor_menu{
