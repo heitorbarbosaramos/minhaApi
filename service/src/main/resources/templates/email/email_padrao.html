@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title th:remove="all">Order Confirmation</title>
+    <meta charset=\"utf-8\"> <!-- utf-8 works for most cases -->
+    <meta name=\"viewport\" content=\"width=device-width\"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name=\"x-apple-disable-message-reformatting\">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+
+    <title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+
+</head>
+<body bgcolor="#ffffff" text="#000000" style="background-color: #F8F8FF; color: #000000; padding: 10px; -webkit-text-size-adjust:none; font-size: 16px; font-family:arial,helvetica,sans-serif;">
+<table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-spacing: 0; margin: 0px auto; max-width: 600px; width: 90%;" align="center">
+    <tr>
+        <td>
+            <!-- CABEÇALHO EMAIL-->
+            <table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-spacing: 0; margin: 0px auto; max-width: 600px; width: 90%;" align="center">
+                <tr>
+                    <td width="20%" align="left">
+                        <img src="https://logodownload.org/wp-content/uploads/2020/12/ok-google-logo-1.png" alt="Logo" border="0" style="border: 0; height: auto; max-width: 80px; width: 80%;">
+                    </td>
+                    <td width="50%" align="left">
+                        <h2 style="font-family: 'Permanent Marker', cursive; font-size: 28px; color: #4B0082;"> Sistema Legal </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" bgcolor="green" style="height: 1.1px"></td>
+                <tr>
+            </table>
+            <!-- ASSUNTO DO EMAIL-->
+            <table cellpadding="15" cellspacing="15" border="0" bgcolor="#ffffff" style="border-spacing: 0; margin: 0px auto; max-width: 600px; width: 90%;" align="center">
+                <tr>
+                    <td align="center"><b><u><h2 th:text="${assunto}">ASSUNTO</h2></u></b></td>
+                </tr>
+            </table>
+            <!-- CORPO DO EMAIL-->
+            <table cellpadding="15" cellspacing="15" border="0" bgcolor="#ffffff" style="border-spacing: 0; margin: 0px auto; max-width: 600px; width: 90%;" align="center">
+                <tr>
+                    <td align="center">
+                        <p th:utext="${corpo}"> CORPO</p>
+                    </td>
+                </tr>
+            </table>
+            <!-- RODA PÉ DO EMAIL-->
+            <table cellpadding="15" cellspacing="15" border="0" bgcolor="#ffffff" style="border-spacing: 0; margin: 0px auto; max-width: 600px; width: 90%;" align="center">
+                <tr style="background-color: #DCDCDC;">
+                    <td width="50%" align="left">
+                        <span th:text="${frase}">FRASE</span>
+                    </td>
+                    <td width="50%" align="left">
+                        Mensagem de rodapé
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+</table>
+</body>
+</html>

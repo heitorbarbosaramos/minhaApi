@@ -34,7 +34,8 @@ public class SecurityConfig {
     };
 
     private static String[] PUBLIC_MATCHERD_GET = {
-            "/actuator/info"
+            "/actuator/info",
+            "/usuario/geralinkrecuperasenha/*"
     };
 
     @Bean

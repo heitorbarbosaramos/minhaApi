@@ -10,6 +10,8 @@ import com.sisweb.api.mapper.UsuarioMapper;
 import com.sisweb.api.repository.UsuarioRepository;
 import com.sisweb.api.security.UsuarioLogado;
 import com.sisweb.api.security.UsuarioSpringSecurity;
+import com.sisweb.api.service.email.EmailSenderService;
+import com.sisweb.api.service.email.corpo.CorpoEmail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -17,6 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -30,6 +35,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoService enderecoService;
     private final UsuarioPerfilService perfilService;
+    private final EmailSenderService emailService;
 
     private Usuario save(Usuario usuario){
         return repository.save(usuario);
@@ -113,4 +119,18 @@ public class UsuarioService {
         return usuarioDTOPage;
     }
 
+    public void geraLinkEsqueciSenha(String emailLogin){
+
+        Usuario usuario = repository.findByLogin(emailLogin);
+
+        LocalDateTime data = LocalDateTime.now().plusMinutes(30);
+
+        Long instante = data.toInstant(ZoneOffset.of("-03:00")).getEpochSecond();
+        usuario.setTimestampRecuperaSenha(instante);
+        save(usuario);
+
+        String corpoEmail = CorpoEmail.esqueciSenha(usuario.getNome(), usuario.getLogin(), data, usuario.getId(), instante );
+
+        emailService.enviaEmail(emailLogin, "Esqueci a senha", corpoEmail);
+    }
 }

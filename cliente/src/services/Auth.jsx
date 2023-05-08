@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginDTO } from "../models/LoginDTO.ts";
 import ApiService from "./ApiService.ts";
 import ToastError from "../componentes/Toast/ToastError.jsx";
+import ToastSucess from "../componentes/Toast/ToastSucess.jsx";
 
 export const AuthContext = createContext();
 
@@ -12,7 +13,10 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const [recoveryPassword, setRecoveryPassword] = useState(false);
+    const [showToastSucess, setShowToastSucess] = useState(false);
+    const [showToastError, setShowToastError] = useState(false);
+    const [mensagemToast, setMensagemToast] = useState("");
 
     const [loginDTO] = useState(new LoginDTO());
 
@@ -52,13 +56,29 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem("myToken", JSON.stringify(LoggedUser))
 
             setUser(LoggedUser);
-
+            setRecoveryPassword(false);
+            setShowToastError(false);
             navigate("/");
 
         }).catch(error => {
             logado = false;
-            alert(error.response.data.mensagem)
+            setRecoveryPassword(true);
+            setShowToastError(true);
+            setMensagemToast(error.response.data.mensagem);
             console.error("====>>>>> ", error);
+        })
+
+    }
+
+    const recuperaSenha = (email, setSpinner) => {
+        ApiService.get(`/rest/usuario/geralinkrecuperasenha/${email}`).then(response => {
+            console.log("EMAIL RECUPERA SENHA ENVIADO: ", response);
+            setMensagemToast("Verifique seu email para recuperar a senha");
+            setShowToastSucess(true);
+            setSpinner(false);
+        }).catch(error => {
+            setSpinner(false);
+            alert(error);
         })
 
     }
@@ -80,9 +100,13 @@ export const AuthProvider = ({ children }) => {
     console.log(logado);
 
     return (
-        <AuthContext.Provider value={{ authenticated: logado, user, loading, login, logout }}>
-            {children}
-        </AuthContext.Provider>
+        <>
+            <ToastSucess show={showToastSucess} setShow={setShowToastSucess} mensagem={mensagemToast}/>
+            <ToastError show={showToastError} setShow={setShowToastError} mensagem={mensagemToast}/>
+            <AuthContext.Provider value={{ authenticated: logado, user, loading, login, logout, recoveryPassword, recuperaSenha }}>
+                {children}
+            </AuthContext.Provider>
+        </>
     )
 
 }

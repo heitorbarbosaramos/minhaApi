@@ -1,0 +1,1 @@
+ALTER TABLE tb_usuario ADD recupera_senha int8 NULL;

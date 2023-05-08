@@ -28,6 +28,8 @@ public class Usuario {
     private String nome;
     @NotNull(message = "Campo obrigatório")
     private Boolean ativo;
+    @Column(name = "RECUPERA_SENHA")
+    private Long timestampRecuperaSenha;
 
     @NotNull(message = "Campo obrigatório")
     @NotEmpty(message = "Campo obrigatório")

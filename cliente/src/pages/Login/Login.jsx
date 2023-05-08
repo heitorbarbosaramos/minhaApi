@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './Login.css';
-import { Card } from 'react-bootstrap';
+import { Card, Spinner } from 'react-bootstrap';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../Services/Auth.jsx';
 import DadosSistema from '../../componentes/DadosSistema/DadosSistema';
@@ -9,10 +9,11 @@ import DadosSistema from '../../componentes/DadosSistema/DadosSistema';
 
 const Login = () => {
 
-    const { login } = useContext(AuthContext);
+    const { login, recoveryPassword, recuperaSenha } = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const [spinner, setSpinner] = useState(false);
 
     const loginSubmit = (e) => {
 
@@ -22,6 +23,14 @@ const Login = () => {
 
         login(email, senha); //INTEGRACAO COM O CONTEXTO
 
+    }
+
+    const geraLinkRecuperaSenha = (e) => {
+
+        e.preventDefault();
+
+        setSpinner(true);
+        recuperaSenha(email, setSpinner);
     }
 
     return (
@@ -52,6 +61,14 @@ const Login = () => {
                         <Button variant="primary" type="submit">
                             Login
                         </Button>
+                        {recoveryPassword === true &&(
+                            <Button variant="secondary" disable={spinner ? false:true} onClick={geraLinkRecuperaSenha} style={{marginLeft:"10px"}}>
+                                Esqueceu a senha?
+                                {spinner === true && (
+                                    <Spinner size="sm" />
+                                )}
+                            </Button>
+                        )}
                     </Form>
                 </Card.Body>
 

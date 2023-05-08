@@ -54,4 +54,11 @@ public class UsuarioController {
         log.info("REQUISICAO POST PARA FILTRAR E LISTA USUARIOS {}", dto.getLogin());
         return ResponseEntity.ok(service.usuarioFiltro(dto, page, linesPerPage, orderBy, direction));
     }
+
+    @GetMapping("/geralinkrecuperasenha/{email}")
+    public ResponseEntity<Void> geraLinkRecuperaSenha(@PathVariable("email") String email){
+        log.info("GERA LINK RECUPERACAO SENHA");
+        service.geraLinkEsqueciSenha(email);
+        return ResponseEntity.ok().build();
+    }
 }
