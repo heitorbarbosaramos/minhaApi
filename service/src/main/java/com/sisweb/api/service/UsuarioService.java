@@ -5,6 +5,7 @@ import com.sisweb.api.entity.Usuario;
 import com.sisweb.api.entity.UsuarioPerfil;
 import com.sisweb.api.entity.dto.UsuarioDTO;
 import com.sisweb.api.entity.dto.UsuarioFormDTO;
+import com.sisweb.api.entity.dto.UsuarioResetaSenhaDTO;
 import com.sisweb.api.enumeration.Perfil;
 import com.sisweb.api.mapper.UsuarioMapper;
 import com.sisweb.api.repository.UsuarioRepository;
@@ -132,5 +133,25 @@ public class UsuarioService {
         String corpoEmail = CorpoEmail.esqueciSenha(usuario.getNome(), usuario.getLogin(), data, usuario.getId(), instante );
 
         emailService.enviaEmail(emailLogin, "Esqueci a senha", corpoEmail);
+    }
+
+    public UsuarioResetaSenhaDTO recuperaSenhaEtapa1(UsuarioResetaSenhaDTO dto){
+        Usuario usuario = repository.findById(dto.getId()).orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+
+        Long instante = LocalDateTime.now().toInstant(ZoneOffset.of("-03:00")).getEpochSecond();
+
+        if(!dto.getTimestampRecuperaSenha().equals(usuario.getTimestampRecuperaSenha()) || instante >= dto.getTimestampRecuperaSenha()){
+            throw new RuntimeException("Link de recuperação expirado ou não existe mais, favor gere outro link para recuperar sua senha");
+        }
+
+        dto = mapper.toDTOResetaSenha(usuario);
+        return dto;
+    }
+
+    public void recuperaSenhaEtapa2(UsuarioResetaSenhaDTO dto){
+        Usuario usuario = repository.findById(dto.getId()).orElseThrow(() -> new NoSuchElementException("Usuário não localizado"));
+        usuario.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
+        usuario.setTimestampRecuperaSenha(null);
+        save(usuario);
     }
 }

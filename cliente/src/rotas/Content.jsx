@@ -11,6 +11,7 @@ import MenuLateral from "./Menu.jsx"
 import ListarUsuario from "../componentes/Usuario/ListarUsuario.jsx"
 import Usuario from "../pages/Usuarios/Usuario.jsx"
 import FormularioUsuario from "../componentes/Usuario/FormularioUsuario.jsx"
+import EsqueciASenha from "../pages/Login/EsqueciASenha.jsx"
 
 const Content = () => {
 
@@ -71,6 +72,7 @@ const Content = () => {
                             <Route path="/" exact element={<Private><Home /></Private>} />
                             <Route path="page1" element={<Private><Page1 /></Private>} />
                             <Route path="login" element={<Login />} />
+                            <Route path="esqueciasenha/:idUsuario/:timestamp" element={<EsqueciASenha />} />
                             <Route path="usuario" element={<Private><Usuario /></Private>} />
                             <Route path="usuarioListar" element={<Private><ListarUsuario /></Private>} />
                             <Route path="formularioIsuario/:idUsuario" element={<Private><FormularioUsuario /></Private>} />

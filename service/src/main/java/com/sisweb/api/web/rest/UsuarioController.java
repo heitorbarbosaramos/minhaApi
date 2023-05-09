@@ -2,6 +2,7 @@ package com.sisweb.api.web.rest;
 
 import com.sisweb.api.entity.dto.UsuarioDTO;
 import com.sisweb.api.entity.dto.UsuarioFormDTO;
+import com.sisweb.api.entity.dto.UsuarioResetaSenhaDTO;
 import com.sisweb.api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,19 @@ public class UsuarioController {
     public ResponseEntity<Void> geraLinkRecuperaSenha(@PathVariable("email") String email){
         log.info("GERA LINK RECUPERACAO SENHA");
         service.geraLinkEsqueciSenha(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/recuperasenhaetapa1")
+    public ResponseEntity<UsuarioResetaSenhaDTO>recuperaSenhaEtapa1(@RequestBody UsuarioResetaSenhaDTO dto){
+        log.info("RECUPERA SENHA ETAPA 1");
+        return ResponseEntity.ok(service.recuperaSenhaEtapa1(dto));
+    }
+
+    @PostMapping("/recuperasenhaetapa2")
+    public ResponseEntity<Void>recuperaSenhaEtapa2(@RequestBody UsuarioResetaSenhaDTO dto){
+        log.info("RECUPERA SENHA ETAPA 2");
+        service.recuperaSenhaEtapa2(dto);
         return ResponseEntity.ok().build();
     }
 }

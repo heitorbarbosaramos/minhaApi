@@ -30,7 +30,9 @@ public class SecurityConfig {
 
     private static String[] PUBLIC_MATCHERS_POST = {
             "/login",
-            "/rest/login"
+            "/rest/login",
+            "/usuario/recuperasenhaetapa1",
+            "/usuario/recuperasenhaetapa2"
     };
 
     private static String[] PUBLIC_MATCHERD_GET = {
