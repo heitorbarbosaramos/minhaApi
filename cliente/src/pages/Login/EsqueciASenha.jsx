@@ -12,6 +12,8 @@ const EsqueciASenha = () =>{
     const { timestamp } = useParams();
     const [usuarioRecuperaSenha] = useState(new UsuarioResetaSenhaDTO());
 
+    const [showForm, setShowForm] = useState(false);
+
     const [toastErroShow, setToastErroShow] = useState(false);
     const [toastSucessShow, setToastSucessShow] = useState(false);
     const [toastMensagem, setToastMensagem] = useState();
@@ -27,6 +29,7 @@ const EsqueciASenha = () =>{
             usuarioRecuperaSenha.nome = response.data.nome;
             usuarioRecuperaSenha.login = response.data.login;
             usuarioRecuperaSenha.timestampRecuperaSenha = response.data.timestampRecuperaSenha;
+            setShowForm(true);
 
             console.log("RECUPERA SENHA ETAPA 1", usuarioRecuperaSenha);
         }).catch(error => {
@@ -47,6 +50,7 @@ const EsqueciASenha = () =>{
         ApiService.post("/rest/usuario/recuperasenhaetapa2", usuarioRecuperaSenha).then(response => {
             console.log("RESETA SENHA: ", response);
             setToastSucessShow(true);
+            setShowForm(false);
             setToastMensagem("Senha alterada.")
         }).catch(error => {
             console.error(error);
@@ -78,10 +82,10 @@ const EsqueciASenha = () =>{
                     </Card.Text>
                 )}
 
-                {toastMensagem === undefined &&(
+                {showForm &&(
                     <>
                         <Card.Text>
-                            Prezado(a) <i>{usuarioRecuperaSenha.nome}</i>, foi solicitado uma troca de senha para o login <i>{usuarioRecuperaSenha.login}</i>, favor preencha os campos abaixo para proseguir.
+                            Prezado(a) <i>{String(usuarioRecuperaSenha.nome)}</i>, foi solicitado uma troca de senha para o login <i>{String(usuarioRecuperaSenha.login)}</i>, favor preencha os campos abaixo para proseguir.
                         </Card.Text>
 
                         <Form onSubmit={resetaSenha} style={{ padding: "10px" }}>
