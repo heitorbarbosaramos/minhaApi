@@ -2,8 +2,13 @@
     padding-top: 80px;
     color: #858383;
     text-align: center;
-    align-content: center;
+    align-items: center;
     font-size: 0.80rem;
+    font-size: 0.68rem;
+}
+
+.dados a{
+    margin-left: 35%;
 }
 
 .dados hr{

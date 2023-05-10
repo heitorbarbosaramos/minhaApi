@@ -23,11 +23,11 @@ function Paginador({ totalPages, paginaAtual, setOffset, setLinesPerPage }) {
     return (
         <div style={{ display: "flex" }}>
             <Form.Select className='mb-3' style={{width: "110px"}} onChange={(e) => onLinesPerPageChange(e)}>
-                <option value={3}>3 Itens</option>
-                <option value={5}>5 Itens</option>
-                <option selected value={10}>10 Itens</option>
-                <option value={15}>15 Itens</option>
-                <option value={20}>20 Itens</option>
+                <option key={1} value={3}>3 Itens</option>
+                <option key={2} value={5}>5 Itens</option>
+                <option key={3} selected value={10}>10 Itens</option>
+                <option key={4} value={15}>15 Itens</option>
+                <option key={5} value={20}>20 Itens</option>
 
             </Form.Select>
             <Pagination>
