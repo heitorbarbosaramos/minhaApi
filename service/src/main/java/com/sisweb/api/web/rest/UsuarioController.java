@@ -1,6 +1,7 @@
 package com.sisweb.api.web.rest;
 
 import com.sisweb.api.entity.dto.UsuarioDTO;
+import com.sisweb.api.entity.dto.UsuarioDetalhesDTO;
 import com.sisweb.api.entity.dto.UsuarioFormDTO;
 import com.sisweb.api.entity.dto.UsuarioResetaSenhaDTO;
 import com.sisweb.api.service.UsuarioService;
@@ -74,5 +75,11 @@ public class UsuarioController {
         log.info("RECUPERA SENHA ETAPA 2");
         service.recuperaSenhaEtapa2(dto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/detalhamento")
+    public ResponseEntity<UsuarioDetalhesDTO> detalhamento(){
+        log.info("REQUISICAO GET PARA RECUPERAR DETALHAMENTO USUARIOS");
+        return ResponseEntity.ok(service.detalhes());
     }
 }

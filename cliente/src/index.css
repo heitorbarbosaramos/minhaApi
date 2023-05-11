@@ -18,6 +18,10 @@ code {
   padding: 10px;
 }
 
+.margin_10px{
+  margin: 10px;
+}
+
 .cursor_ponter{
   cursor: pointer;
 }

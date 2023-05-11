@@ -4,6 +4,7 @@ import com.sisweb.api.entity.Endereco;
 import com.sisweb.api.entity.Usuario;
 import com.sisweb.api.entity.UsuarioPerfil;
 import com.sisweb.api.entity.dto.UsuarioDTO;
+import com.sisweb.api.entity.dto.UsuarioDetalhesDTO;
 import com.sisweb.api.entity.dto.UsuarioFormDTO;
 import com.sisweb.api.entity.dto.UsuarioResetaSenhaDTO;
 import com.sisweb.api.enumeration.Perfil;
@@ -22,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,5 +155,27 @@ public class UsuarioService {
         usuario.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
         usuario.setTimestampRecuperaSenha(null);
         save(usuario);
+    }
+
+    public UsuarioDetalhesDTO detalhes(){
+        List<Usuario> usuarios = repository.findAll();
+        Integer quantTotal = usuarios.size();
+
+        Integer quantAtivo = usuarios.stream().filter(item -> item.getAtivo()).collect(Collectors.toList()).size();
+        Integer quantInativo = usuarios.stream().filter(item -> !item.getAtivo()).collect(Collectors.toList()).size();
+        Integer quantResetaSenha = usuarios.stream().filter(item -> item.getTimestampRecuperaSenha() != null).collect(Collectors.toList()).size();
+
+        UsuarioDetalhesDTO detalhesDTO = new UsuarioDetalhesDTO();
+        detalhesDTO.setQuantUsuario(quantTotal);
+        detalhesDTO.setQuantUsuarioAtivo(quantAtivo);
+        detalhesDTO.setQuantUsuarioInativo(quantInativo);
+        detalhesDTO.setQuantUsuarioSenhaResta(quantResetaSenha);
+
+        List<String> query = repository.perfilGroup();
+
+        for(String x : query){
+            detalhesDTO.addQuantPerfilGroup(x.split(",")[0],  Integer.parseInt(x.split(",")[1]));
+        }
+        return detalhesDTO;
     }
 }
