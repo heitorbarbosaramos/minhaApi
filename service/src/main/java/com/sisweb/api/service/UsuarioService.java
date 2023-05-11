@@ -76,7 +76,11 @@ public class UsuarioService {
         Set<UsuarioPerfil> perfis = new HashSet<>();
         perfis = dto.getIdsPerfis().stream().map(item -> perfilService.findById(item)).collect(Collectors.toSet());
 
-        dto.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
+        if(!dto.getSenha().isEmpty()) {
+            dto.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
+        }else {
+            dto.setSenha(findById(dto.getId()).getSenha());
+        }
 
         Usuario usuario = mapper.fromFormDTO(dto);
         usuario.setPerfis(perfis);

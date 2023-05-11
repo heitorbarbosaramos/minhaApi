@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import ToastError from "../Toast/ToastError.jsx";
 import ToastSucess from "../Toast/ToastSucess.jsx";
 import ToastWornig from "../Toast/ToastWarning.jsx";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import ToastInfo from "../Toast/ToastInfo.jsx";
 import { Endereco } from "../../models/Endereco.ts";
 
@@ -19,14 +19,14 @@ function addTell(setFone, fones, novoFone) {
 }
 
 function checkPerfis(setIdsPerfis, idsPerfis, novoPerfil) {
+    console.log("INDICE ", idsPerfis.indexOf(novoPerfil), " DO PERFIL: ", novoPerfil, " - ", idsPerfis)
     if (idsPerfis.indexOf(novoPerfil) === -1) {
         setIdsPerfis([novoPerfil, ...idsPerfis]);
-        console.log("ACIONANDO PERFIL: ")
+        console.log("ACIONANDO PERFIL: ", idsPerfis)
     } else {
         idsPerfis.splice(novoPerfil);
-        console.log("REMOVENDO PERFIL: ")
+        console.log("REMOVENDO PERFIL: ", idsPerfis)
     }
-    console.log("EDD PERFIL: ", idsPerfis);
 }
 
 const FormularioUsuario = () => {
@@ -42,10 +42,29 @@ const FormularioUsuario = () => {
     const [listaPerfis, setListaPerfis] = useState([]);
     const [loginExiste, setLoginExiste] = useState(false);
 
-    const [usuarioDTO] = useState(new UsuarioDTO());
-    const [endereco] = useState(new Endereco());
-    usuarioDTO.setEndereco(endereco);
+    const [usuarioDTO, setUsuarioDto] = useState(new UsuarioDTO());
+    const [endereco, setEndereco] = useState(new Endereco());
 
+    const [idUser, setIdUser] = useState(null);
+    const [nome, setNome] = useState("");
+    const [login, setLogin] = useState("");
+    const [senha, setSenha] = useState("");
+    const [ativo, setAtivo] = useState(false);
+    const [fone, setFone] = useState([]);
+    const [idsPerfis, setIdsPerfis] = useState([]);
+
+    const [idEnd, setIdEnd] = useState(null);
+    const [cep, setCep] = useState("");
+    const [logradouro, setLogradouro] = useState("");
+    const [numero, setNumero] = useState("");
+    const [bairro, setBairro] = useState("");
+    const [localidade, setLocalidade] = useState("");
+    const [complemento, setComplemento] = useState("");
+    const [uf, setUf] = useState("");
+    const [ddd, setDdd] = useState("");
+    const [ibge, setIbge] = useState("");
+    const [gia, setGia] = useState("");
+ 
     if (idUsuario > 0) {
 
         console.log("PARAMETROS: ", idUsuario);
@@ -56,30 +75,30 @@ const FormularioUsuario = () => {
 
                 console.log("USUARIO LOCALIZADO: ", response)
 
-                usuarioDTO.setId(response.data.id);
-                usuarioDTO.setNome(response.data.nome);
-                usuarioDTO.setAtivo(response.data.ativo);
-                usuarioDTO.setLogin(response.data.login);
-                usuarioDTO.setFone(response.data.fone);
+                setIdUser(response.data.id);
+                setNome(response.data.nome);
+                setAtivo(response.data.ativo);
+                setLogin(response.data.login);
+                setFone(response.data.fone);
 
                 let idsPerfilRecuperado = [];
                 for (let i = 0; i < response.data.perfis.length; i++) {
                     console.log("PERFIS RECUPERADOS: ", response.data.perfis[i].id, response.data.perfis[i].nome)
                     idsPerfilRecuperado.push(response.data.perfis[i].id);
                 }
-                usuarioDTO.setPerfis(idsPerfilRecuperado)
+                setIdsPerfis(idsPerfilRecuperado)
 
-                usuarioDTO.endereco.setId(response.data.endereco.id);
-                usuarioDTO.endereco.setBairro(response.data.endereco.bairro);
-                usuarioDTO.endereco.setCep(response.data.endereco.cep);
-                usuarioDTO.endereco.setComplemento(response.data.endereco.complemento);
-                usuarioDTO.endereco.setDDD(response.data.endereco.ddd);
-                usuarioDTO.endereco.setGia(response.data.endereco.gia);
-                usuarioDTO.endereco.setIbge(response.data.endereco.ibge);
-                usuarioDTO.endereco.setLocalidade(response.data.endereco.localidade);
-                usuarioDTO.endereco.setLogradouro(response.data.endereco.logradouro);
-                usuarioDTO.endereco.setNumero(response.data.endereco.numero);
-                usuarioDTO.endereco.setUf(response.data.endereco.uf);
+                setIdEnd(response.data.endereco.id);
+                setBairro(response.data.endereco.bairro);
+                setCep(response.data.endereco.cep);
+                setComplemento(response.data.endereco.complemento);
+                setDdd(response.data.endereco.ddd);
+                setGia(response.data.endereco.gia);
+                setIbge(response.data.endereco.ibge);
+                setLocalidade(response.data.endereco.localidade);
+                setLogradouro(response.data.endereco.logradouro);
+                setNumero(response.data.endereco.numero);
+                setUf(response.data.endereco.uf);
 
                 console.log("RECUPERANDO USUARIO DTO: ", usuarioDTO);
 
@@ -92,44 +111,69 @@ const FormularioUsuario = () => {
                 limpaForm();
             })
 
-        }, []);
+        }, [idUsuario, usuarioDTO]);
 
 
     }
 
-    function buscarTodosPerfis(e) {
-        e.preventDefault();
-
-        ApiService.get("/rest/perfil").then(response => {
-            setListaPerfis(response.data.content);
-            console.log("TODOS OS PERFIS: ", response)
-            console.log("LISTA PERFIL", listaPerfis);
-        }).catch(error => {
-            console.log("TODOS OS PERFIS: ", error)
-        })
+    function buscarTodosPerfis() {
+    
+        useEffect(() => {
+            ApiService.get("/rest/perfil").then(response => {
+                setListaPerfis(response.data.content);
+                console.log("TODOS OS PERFIS: ", response.data.content)
+                console.log("LISTA PERFIL", listaPerfis);
+            }).catch(error => {
+                console.log("TODOS OS PERFIS: ", error)
+            })
+        },[])
     }
 
     function limpaForm() {
-        usuarioDTO = new UsuarioDTO();
+        console.log("FORMULARIO LIMPANDO")
+        setIdUser(null);
+        setUsuarioDto();
+        setNome("");
+        setLogin("");
+        setSenha("");
+        setAtivo(false);
+        setFone([]);
+        setIdsPerfis([]);
+        setIdEnd(null);
+        setCep("");
+        setLogradouro("");
+        setNumero("");
+        setBairro("");
+        setLocalidade("");
+        setComplemento("");
+        setUf("");
+        setDdd("");
+        setIbge("");
+        setGia("");
+
 
         console.log("FORMULARIO LIMPO")
+        return <Navigate to="formularioIsuario/0" />
     }
 
     function buscaLogin(e) {
-        e.preventDefault();
-        console.log("BUSCA LOGIN: ", usuarioDTO.login)
 
-        ApiService.get(`/rest/usuario/findlogin/${usuarioDTO.login}`).then((response) => {
+        console.log("BUSCA LOGIN: ", e)
+
+        ApiService.get(`/rest/usuario/findlogin/${e}`).then((response) => {
             console.log(response)
             setLoginExiste(true);
             setShowToastWarning(true);
             setMensagemToast("Login já em uso")
         }).catch(error => {
+            setLoginExiste(false);
             console.error(error)
         })
     }
 
     function buscaEndereco(cep) {
+
+        setCep(cep);
         
         if(cep.length < 9){return;}
     
@@ -137,18 +181,20 @@ const FormularioUsuario = () => {
 
         ApiService.get(`/rest/endereco/${cep}`).then(response => {
 
-            usuarioDTO.endereco.setBairro(response.data.bairro);
-            usuarioDTO.endereco.setCep(response.data.cep);
-            usuarioDTO.endereco.setComplemento(response.data.complemento);
-            usuarioDTO.endereco.setDDD(response.data.ddd);
-            usuarioDTO.endereco.setGia(response.data.gia);
-            usuarioDTO.endereco.setIbge(response.data.ibge);
-            usuarioDTO.endereco.setLocalidade(response.data.localidade);
-            usuarioDTO.endereco.setLogradouro(response.data.logradouro);
-            usuarioDTO.endereco.setNumero(response.data.numero);
-            usuarioDTO.endereco.setUf(response.data.uf);
+            if(cep.lengt < 9){return}
+
+            setBairro(response.data.bairro);
+            setCep(response.data.cep);
+            setComplemento(response.data.complemento);
+            setDdd(response.data.ddd);
+            setGia(response.data.gia);
+            setIbge(response.data.ibge);
+            setLocalidade(response.data.localidade);
+            setLogradouro(response.data.logradouro);
+            setNumero(response.data.numero);
+            setUf(response.data.uf);
  
-            console.log("ENDERECO: ", usuarioDTO.endereco);
+            console.log("ENDERECO: ", response.data);
         }).catch(error => {
             console.error("ENDERECO: ", error)
         })
@@ -156,14 +202,37 @@ const FormularioUsuario = () => {
     }
 
     function salvarForm(e) {
+
         e.preventDefault();
+
+        usuarioDTO.setId(idUser);
+        usuarioDTO.setLogin(login);
+        usuarioDTO.setSenha(senha);
+        usuarioDTO.setNome(nome);
+        usuarioDTO.setAtivo(ativo);
+        usuarioDTO.setFone(fone);
+        usuarioDTO.setPerfis(idsPerfis);
+      
+        endereco.setId(idEnd);
+        endereco.setCep(cep);
+        endereco.setLogradouro(logradouro);
+        endereco.setNumero(numero);
+        endereco.setComplemento(complemento);
+        endereco.setBairro(bairro);
+        endereco.setLocalidade(localidade);
+        endereco.setUf(uf);
+        endereco.setIbge(ibge);
+        endereco.setDDD(ddd);
+        endereco.setGia(gia);
+
+        usuarioDTO.setEndereco(endereco);
+
         console.log("SALVAR USUARIO", usuarioDTO);
 
         ApiService.post("/rest/usuario", usuarioDTO).then(response => {
             console.log("FORMULARIO NOVO USUARIO: ", response);
             setShowToastSucess(true);
             setMensagemToast("Usuário cadastrado com sucesso!")
-            limpaForm();
         }).catch(error => {
             console.error("FORMULARIO NOVO USUARIO: ", error);
             setShowToastError(true);
@@ -181,93 +250,95 @@ const FormularioUsuario = () => {
         })
 
     }
+    
+    buscarTodosPerfis();
 
     return (
         <div className="border">
             <Form onSubmit={salvarForm} className="form-inline">
 
-                <div className="row">
+                <div className="row mt-3">
 
                     <Form.Group className="form-group col-md-5">
                         <Form.Label>Nome</Form.Label>
-                        <Form.Control type="text" required value={usuarioDTO.nome} onChange={(e) => usuarioDTO.setNome(e.target.value)} />
+                        <Form.Control type="text" required value={nome} onChange={(e) => {setNome(e.target.value); console.log(usuarioDTO)}} />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-4">
                         <Form.Label className={loginExiste === true ? "cor_erro" : ""}>{loginExiste === true ? "usuário já existe" : "Login"}
                         </Form.Label>
-                        <Form.Control type="email" required value={usuarioDTO.login} onChange={(e) => { usuarioDTO.setLogin(e.target.value); setLoginExiste(false) }} />
+                        <Form.Control type="email" required value={login} onChange={(e) => {setLogin(e.target.value); buscaLogin(e.target.value) }} />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-3">
                         <Form.Label>Senha</Form.Label>
-                        <Form.Control type="password" value={usuarioDTO.senha} onChange={(e) => usuarioDTO.setSenha(e.target.value)} />
+                        <Form.Control type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
                     </Form.Group>
                 </div>
 
-                <div class="row">
+                <div class="row mt-3">
                     <Form.Group className="form-group col-md-2">
                         <Form.Label>CEP</Form.Label>
-                        <Form.Control type="text" as={IMaskInput} mask="00000-000"  value={usuarioDTO.endereco.cep} onChange={(e) => {buscaEndereco(e.target.value)}} />
+                        <Form.Control type="text" as={IMaskInput} mask="00000-000"  value={cep} onChange={(e) => {buscaEndereco(e.target.value)}} />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-4">
                         <Form.Label>Logradouro</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.logradouro} onChange={(e) => {usuarioDTO.endereco.setLogradouro(e.target.value)}} />
+                        <Form.Control type="text" value={logradouro} onChange={(e) => {setLogradouro(e.target.value)}} />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-1">
                         <Form.Label>Nº</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.numero} onChange={(e) => {usuarioDTO.endereco.setNumero(e.target.value)}} />
+                        <Form.Control type="text" value={numero} onChange={(e) => {setNumero(e.target.value)}} />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-5">
                         <Form.Label>Bairro</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.bairro} onChange={(e) => {usuarioDTO.endereco.setBairro(e.target.value)}}/>
+                        <Form.Control type="text" value={bairro} onChange={(e) => {setBairro(e.target.value)}}/>
                     </Form.Group>
                 </div>
 
-                <div class="row">
+                <div class="row mt-3">
 
                     <Form.Group className="form-group col-md-4">
                         <Form.Label>Município</Form.Label>
-                        <Form.Control type="text"  value={usuarioDTO.endereco.localidade} onChange={(e) => {usuarioDTO.endereco.setLocalidade(e.target.value)}} />
+                        <Form.Control type="text"  value={localidade} onChange={(e) => {setLocalidade(e.target.value)}} />
                     </Form.Group>
                     
                     <Form.Group className="form-group col-md-2">
                         <Form.Label>Complemento</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.complemento} onChange={(e) => {usuarioDTO.endereco.setComplemento(e.target.value)}} />
+                        <Form.Control type="text" value={complemento} onChange={(e) => {setComplemento(e.target.value)}} />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-1">
                         <Form.Label>UF</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.uf} onChange={(e) => {usuarioDTO.endereco.setUf(e.target.value)}} />
+                        <Form.Control type="text" value={uf} onChange={(e) => {setUf(e.target.value)}} />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-1">
                         <Form.Label>DDD</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.ddd} disabled />
+                        <Form.Control type="text" value={ddd} disabled />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-2">
                         <Form.Label>IBGE</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.ibge} disabled />
+                        <Form.Control type="text" value={ibge} disabled />
                     </Form.Group>
 
                     <Form.Group className="form-group col-md-2">
                         <Form.Label>GIA</Form.Label>
-                        <Form.Control type="text" value={usuarioDTO.endereco.gia} disabled />
+                        <Form.Control type="text" value={gia} disabled />
                     </Form.Group>
                 </div>
 
-                <div className="row">
+                <div className="row mt-3">
                     <div className="mb-3" style={{width:"15%"}}>
-                        Perfis:
+                        
                         {listaPerfis && (
                             listaPerfis.map((item) => {
                                 return(
                                     <Form.Group className="form-group col-md-2" controlId="formBasicCheckbox">
-                                        <Form.Check type="checkbox" id={item.id} defaultChecked={usuarioDTO.idsPerfis.indexOf(item.id) >= 0 ? true : false} label={item.nome} value={item.id} onClick={(e) =>{checkPerfis(usuarioDTO.setIdsPerfis, usuarioDTO.idsPerfis, e.target.value)}} />  
+                                        <Form.Check type="checkbox" id={item.id} defaultChecked={idsPerfis.indexOf(item.id) !== -1 ? true:false} label={item.nome} value={item.id} onClick={(e) =>{checkPerfis(setIdsPerfis, idsPerfis, e.target.value)}} />  
                                     </Form.Group>
                                 )
                             })
@@ -277,7 +348,7 @@ const FormularioUsuario = () => {
                     <div className="mb-3" style={{width:"12%"}}>
                     <Form.Group className="form-group col-md-2">
                         <Form.Label>Usuário ativo:</Form.Label>
-                        <Form.Check  type="switch" id="custom-switch" checked={usuarioDTO.ativo} label={usuarioDTO.ativo === true ? "Ativo" : "Inativo"} value={true} onChange={(e) => {usuarioDTO.setAtivo(!usuarioDTO.ativo); console.log(e)}} />
+                        <Form.Check  type="switch" id="custom-switch" checked={ativo} label={ativo === true ? "Ativo" : "Inativo"} value={true} onChange={(e) => {setAtivo(!ativo); console.log(e.target.select)}} />
                     </Form.Group>
 
                     </div>
@@ -287,13 +358,13 @@ const FormularioUsuario = () => {
                             <Form.Label>telefones:</Form.Label>
                             <Form.Control type="phone" as={IMaskInput} mask="(00) 00000-0000" 
                                 // eslint-disable-next-line no-unused-expressions
-                                onChange={(e) =>{console.log("QUANT: ", e.target.value.length);e.target.value.length === 15 ? addTell(usuarioDTO.setFone, usuarioDTO.fone, e.target.value):"";e.target.value.length === 15 ? e.target.value="" : ""}} />
+                                onChange={(e) =>{console.log("QUANT: ", e.target.value.length);e.target.value.length === 15 ? addTell(setFone, fone, e.target.value):"";e.target.value.length === 15 ? e.target.value="" : ""}} />
                         </Form.Group>
                     </div>
                     <div className="form-group col-md-2" style={{width:"20%"}}>
-                        {usuarioDTO.fone > 0 ? <Button variant="danger" size="sm" onClick={() => usuarioDTO.setFone([])} >Resetar</Button> : ""}
-                        {usuarioDTO.fone && (
-                            usuarioDTO.fone.map((item) => {
+                        {fone.length > 0 ? <Button variant="danger" size="sm" onClick={() => setFone([])} >Resetar</Button> : ""}
+                        {fone && (
+                            fone.map((item) => {
                                 return(
                                     <p>
                                         {item}
@@ -304,6 +375,9 @@ const FormularioUsuario = () => {
 
                     </div>
                 </div>
+
+                <Button type="submit">SALVAR</Button>
+                <Button variant="warning" onClick={()=>limpaForm()} style={{marginLeft:"10px"}}>RESETAR</Button>
 
             </Form>
 

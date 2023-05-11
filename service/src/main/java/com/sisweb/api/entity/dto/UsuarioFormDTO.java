@@ -18,7 +18,6 @@ public class UsuarioFormDTO {
     @NotEmpty(message = "Campo obrigatório")
     @Email(message = "Não é um email valido")
     private String login;
-    @NotEmpty(message = "Campo obrigatório")
     private String senha;
     @NotEmpty(message = "Campo obrigatório")
     private String nome;
