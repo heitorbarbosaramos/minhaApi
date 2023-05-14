@@ -23,7 +23,7 @@ const Usuario = () => {
         <div className="border">
             Dados Gerais sobre os usuários
 
-            <div style={{display:"flex", margin:"10px"}}>
+            <div style={{display:"flex", flexWrap:"wrap", margin:"10px"}}>
                 <Card style={{ width: '10rem', maxHeight:'8rem'}} className="margin_10px">
                     <Card.Header><Card.Title>Total usuários</Card.Title></Card.Header>
                     <Card.Body>

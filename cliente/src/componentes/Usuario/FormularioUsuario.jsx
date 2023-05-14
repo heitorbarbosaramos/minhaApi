@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-const-assign */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react"
@@ -64,7 +66,10 @@ const FormularioUsuario = () => {
     const [ddd, setDdd] = useState("");
     const [ibge, setIbge] = useState("");
     const [gia, setGia] = useState("");
- 
+
+    const eddRestrito = localStorage.getItem('myApiPerfis').indexOf('ROLE_USUARIO');
+
+
     if (idUsuario > 0) {
 
         console.log("PARAMETROS: ", idUsuario);
@@ -81,12 +86,10 @@ const FormularioUsuario = () => {
                 setLogin(response.data.login);
                 setFone(response.data.fone);
 
-                let idsPerfilRecuperado = [];
                 for (let i = 0; i < response.data.perfis.length; i++) {
                     console.log("PERFIS RECUPERADOS: ", response.data.perfis[i].id, response.data.perfis[i].nome)
-                    idsPerfilRecuperado.push(response.data.perfis[i].id);
+                    setIdsPerfis([response.data.perfis[i].id, ...idsPerfis]);
                 }
-                setIdsPerfis(idsPerfilRecuperado)
 
                 setIdEnd(response.data.endereco.id);
                 setBairro(response.data.endereco.bairro);
@@ -253,6 +256,8 @@ const FormularioUsuario = () => {
     
     buscarTodosPerfis();
 
+    console.log("idsPerfilRecuperado", idsPerfis)
+
     return (
         <div className="border">
             <Form onSubmit={salvarForm} className="form-inline">
@@ -338,7 +343,7 @@ const FormularioUsuario = () => {
                             listaPerfis.map((item) => {
                                 return(
                                     <Form.Group className="form-group col-md-2" controlId="formBasicCheckbox">
-                                        <Form.Check type="checkbox" id={item.id} defaultChecked={idsPerfis.indexOf(item.id) !== -1 ? true:false} label={item.nome} value={item.id} onClick={(e) =>{checkPerfis(setIdsPerfis, idsPerfis, e.target.value)}} />  
+                                        <Form.Check type="checkbox" disabled={eddRestrito === -1 ? true:false} id={item.id} defaultChecked={idsPerfis.indexOf(item.id) !== -1 ? true:false} label={item.nome} value={item.id} onClick={(e) =>{checkPerfis(setIdsPerfis, idsPerfis, e.target.value)}} />  
                                     </Form.Group>
                                 )
                             })
@@ -348,7 +353,7 @@ const FormularioUsuario = () => {
                     <div className="mb-3" style={{width:"12%"}}>
                     <Form.Group className="form-group col-md-2">
                         <Form.Label>Usuário ativo:</Form.Label>
-                        <Form.Check  type="switch" id="custom-switch" checked={ativo} label={ativo === true ? "Ativo" : "Inativo"} value={true} onChange={(e) => {setAtivo(!ativo); console.log(e.target.select)}} />
+                        <Form.Check  type="switch" id="custom-switch" disabled={eddRestrito === -1 ? true:false} checked={ativo} label={ativo === true ? "Ativo" : "Inativo"} value={true} onChange={(e) => {setAtivo(!ativo); console.log(e.target.select)}} />
                     </Form.Group>
 
                     </div>
