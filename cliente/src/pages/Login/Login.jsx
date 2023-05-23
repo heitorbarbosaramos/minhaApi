@@ -1,15 +1,16 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './Login.css';
-import { Card, Image, Spinner } from 'react-bootstrap';
+import { Card, Spinner } from 'react-bootstrap';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../Services/Auth.jsx';
+import { BsGoogle, BsFacebook, BsGithub } from "react-icons/bs";
 import DadosSistema from '../../componentes/DadosSistema/DadosSistema';
 
 
 const Login = () => {
 
-    const { login, recoveryPassword, recuperaSenha, loginSocialGoogle } = useContext(AuthContext);
+    const { login, recoveryPassword, recuperaSenha, loginSocial } = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
@@ -33,9 +34,9 @@ const Login = () => {
         recuperaSenha(email, setSpinner);
     }
 
-    const loginGoogle = (e) => {
+    const loginSSoSocial = (social) => {
 
-        loginSocialGoogle();
+        loginSocial(social);
     }
 
     return (
@@ -85,9 +86,9 @@ const Login = () => {
                     <Card.Header as="h5">Login social</Card.Header>
                     <p style={{marginTop:"40px", marginBottom:"40px"}}>Use suas redes sociais para fazer login no sistema</p>
                     
-                    <Button  variant="outline-secondary" className='loginSocial' onClick={() => loginGoogle()}> Google</Button>
-                    <Button  variant="outline-secondary" className='loginSocial'> Facebook</Button>
-                    <Button  variant="outline-secondary" className='loginSocial'> GitHub</Button>
+                    <Button  variant="outline-secondary" className='loginSocial' onClick={() => loginSSoSocial("google")}> <BsGoogle /> Google</Button>
+                    <Button  variant="outline-secondary" className='loginSocial' onClick={() => loginSSoSocial("facebook")}> <BsFacebook /> Facebook</Button>
+                    <Button  variant="outline-secondary" className='loginSocial' onClick={() => loginSSoSocial("github")}> <BsGithub /> GitHub</Button>
 
                 </Card.Body>
 
