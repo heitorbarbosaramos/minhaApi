@@ -126,6 +126,10 @@ public class UsuarioService {
 
         Usuario usuario = repository.findByLogin(emailLogin);
 
+        if(usuario == null){
+            throw new NoSuchElementException("Login não existe");
+        }
+
         LocalDateTime data = LocalDateTime.now().plusMinutes(30);
 
         Long instante = data.toInstant(ZoneOffset.of("-03:00")).getEpochSecond();

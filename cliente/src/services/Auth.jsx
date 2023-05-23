@@ -77,8 +77,10 @@ export const AuthProvider = ({ children }) => {
             setShowToastSucess(true);
             setSpinner(false);
         }).catch(error => {
+            console.log("ERROR: ", error)
+            setMensagemToast(error.response.data.mensagem);
+            setShowToastError(true);
             setSpinner(false);
-            alert(error);
         })
 
     }
