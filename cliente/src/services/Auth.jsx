@@ -85,6 +85,14 @@ export const AuthProvider = ({ children }) => {
 
     }
 
+    const loginSocialGoogle = () => {
+        ApiService.get("/rest/oauth2/authorization/google").then(response => {
+            console.log("LOGIN SOCIAL GOOGLE: ", response);
+        }).catch(error => {
+            console.log("ERRO LOGIN SOCIAL GOOGLE: ", error);
+        })
+    }
+
     const logout = () => {
         logado = false;
         console.log("LOGOUT");
@@ -105,7 +113,7 @@ export const AuthProvider = ({ children }) => {
         <>
             <ToastSucess show={showToastSucess} setShow={setShowToastSucess} mensagem={mensagemToast}/>
             <ToastError show={showToastError} setShow={setShowToastError} mensagem={mensagemToast}/>
-            <AuthContext.Provider value={{ authenticated: logado, user, loading, login, logout, recoveryPassword, recuperaSenha }}>
+            <AuthContext.Provider value={{ authenticated: logado, user, loading, login, logout, recoveryPassword, recuperaSenha, loginSocialGoogle }}>
                 {children}
             </AuthContext.Provider>
         </>

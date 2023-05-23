@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './Login.css';
-import { Card, Spinner } from 'react-bootstrap';
+import { Card, Image, Spinner } from 'react-bootstrap';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../Services/Auth.jsx';
 import DadosSistema from '../../componentes/DadosSistema/DadosSistema';
@@ -9,7 +9,7 @@ import DadosSistema from '../../componentes/DadosSistema/DadosSistema';
 
 const Login = () => {
 
-    const { login, recoveryPassword, recuperaSenha } = useContext(AuthContext);
+    const { login, recoveryPassword, recuperaSenha, loginSocialGoogle } = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
@@ -33,11 +33,16 @@ const Login = () => {
         recuperaSenha(email, setSpinner);
     }
 
+    const loginGoogle = (e) => {
+
+        loginSocialGoogle();
+    }
+
     return (
-        <div className='login'>
+        <div className='login' style={{display:"flex", flexDirection:"row"}}>
 
 
-            <Card style={{ width: '28rem' }}>
+            <Card style={{ width: '28rem', height:'360px' }}>
 
                 <Card.Body style={{ padding: 0 }}>
 
@@ -70,6 +75,20 @@ const Login = () => {
                             </Button>
                         )}
                     </Form>
+                </Card.Body>
+
+            </Card>
+            <Card style={{ width: '15rem', height:'360px'  }}>
+
+                <Card.Body style={{ padding: 0 }}>
+
+                    <Card.Header as="h5">Login social</Card.Header>
+                    <p style={{marginTop:"40px", marginBottom:"40px"}}>Use suas redes sociais para fazer login no sistema</p>
+                    
+                    <Button  variant="outline-secondary" className='loginSocial' onClick={() => loginGoogle()}> Google</Button>
+                    <Button  variant="outline-secondary" className='loginSocial'> Facebook</Button>
+                    <Button  variant="outline-secondary" className='loginSocial'> GitHub</Button>
+
                 </Card.Body>
 
             </Card>

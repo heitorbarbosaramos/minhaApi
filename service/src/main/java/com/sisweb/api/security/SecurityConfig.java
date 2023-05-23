@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERD_GET).permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .oauth2Login()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
