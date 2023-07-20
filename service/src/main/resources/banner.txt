@@ -1,0 +1,7 @@
+${AnsiColor.WHITE}  .   ____          _            ${AnsiColor.RED}__ _ _    ${AnsiColor.GREEN}  ____                        ${AnsiColor.YELLOW} ___        __          
+${AnsiColor.WHITE} /\\ / ___'_ __ _ _(_)_ __  __ _ ${AnsiColor.RED}\ \ \ \   ${AnsiColor.GREEN} / ___|_   _  __ _ _ __ __ _  ${AnsiColor.YELLOW}|_ _|_ __  / _| ___     
+${AnsiColor.WHITE}( ( )\___ | '_ | '_| | '_ \/ _` |${AnsiColor.RED} \ \ \ \  ${AnsiColor.GREEN}| |  _| | | |/ _` | '__/ _` | ${AnsiColor.YELLOW} | || '_ \| |_ / _ \    
+${AnsiColor.WHITE} \\/  ___)| |_)| | | | | || (_| |${AnsiColor.RED}  ) ) ) ) ${AnsiColor.GREEN}| |_| | |_| | (_| | | | (_| | ${AnsiColor.YELLOW} | || | | |  _| (_) |   
+${AnsiColor.WHITE}  '  |____| .__|_| |_|_| |_\__, |${AnsiColor.RED} / / / /  ${AnsiColor.GREEN} \____|\__,_|\__,_|_|  \__,_| ${AnsiColor.YELLOW}|___|_| |_|_|  \___/    
+${AnsiColor.WHITE} =========|_|==============|___/=${AnsiColor.RED}/_/_/_/   ${AnsiColor.WHITE}====================================================     
+${AnsiColor.GREEN}:: Spring Boot :: ${AnsiColor.WHITE}Powered by Spring Boot ${spring-boot.version}	
