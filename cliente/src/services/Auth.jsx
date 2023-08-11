@@ -4,6 +4,7 @@ import { LoginDTO } from "../models/LoginDTO.ts";
 import ApiService from "./ApiService.ts";
 import ToastError from "../componentes/Toast/ToastError.jsx";
 import ToastSucess from "../componentes/Toast/ToastSucess.jsx";
+import Cookies from "js-cookie";
 
 export const AuthContext = createContext();
 
@@ -20,15 +21,15 @@ export const AuthProvider = ({ children }) => {
 
     const [loginDTO] = useState(new LoginDTO());
 
-    let logado = localStorage.getItem("myToken") !== null ? true : false;
+    let logado = Cookies.get("api-token")  !==  undefined ? true : false;
 
     useEffect(() => {
-        const recoveredUser = localStorage.getItem("myToken");
+        const recoveredUser = Cookies.get("api-token");
 
         console.log(recoveredUser);
 
         if(recoveredUser) {
-            setUser(JSON.parse(recoveredUser))
+            setUser(recoveredUser)
         }
 
         setLoading(false);
@@ -48,12 +49,15 @@ export const AuthProvider = ({ children }) => {
                 login,
                 token: response.data.tokenJWT,
             }
-
-            localStorage.setItem("myApiLogin", JSON.stringify(response.data.login).replaceAll("\"", ""))
-            localStorage.setItem("myApiNome", JSON.stringify(response.data.nome).replaceAll("\"", ""))
-            localStorage.setItem("myApiPerfis", JSON.stringify(response.data.perfis).replaceAll("\"", ""))
-            localStorage.setItem("myApiToken", JSON.stringify(response.data.tokenJWT).replaceAll("\"", ""))
-            localStorage.setItem("myToken", JSON.stringify(LoggedUser))
+            Cookies.set("api-nome", response.data.nome)
+            Cookies.set("api-token", response.data.tokenJWT)
+            Cookies.set("api-perfil", response.data.perfis)
+            Cookies.set("api-login", response.data.login)
+            //localStorage.setItem("myApiLogin", JSON.stringify(response.data.login).replaceAll("\"", ""))
+            //localStorage.setItem("myApiNome", JSON.stringify(response.data.nome).replaceAll("\"", ""))
+            //localStorage.setItem("myApiPerfis", JSON.stringify(response.data.perfis).replaceAll("\"", ""))
+            //localStorage.setItem("myApiToken", JSON.stringify(response.data.tokenJWT).replaceAll("\"", ""))
+            //localStorage.setItem("myToken", JSON.stringify(LoggedUser))
 
             setUser(LoggedUser);
             setRecoveryPassword(false);
@@ -61,11 +65,12 @@ export const AuthProvider = ({ children }) => {
             navigate("/");
 
         }).catch(error => {
+            console.error("====>>>>> ", error);
             logado = false;
             setRecoveryPassword(true);
             setShowToastError(true);
             setMensagemToast(error.response.data.mensagem);
-            console.error("====>>>>> ", error);
+            
         })
 
     }
@@ -99,6 +104,12 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("myApiPerfis")
         localStorage.removeItem("myApiToken");
         localStorage.removeItem("myToken");
+        Cookies.remove('api-nome')
+        Cookies.remove('api-login')
+        Cookies.remove('api-token')
+        Cookies.remove('api-perfil')
+        Cookies.remove('JSESSIONID')
+        ApiService.get("/rest/login/logout").catch(error => {console.error(error)});
         setUser(null);
         navigate("/login?logout")
     }

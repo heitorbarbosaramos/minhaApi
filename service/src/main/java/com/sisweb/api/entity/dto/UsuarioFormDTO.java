@@ -23,6 +23,9 @@ public class UsuarioFormDTO {
     private String nome;
     @NotNull(message = "Campo obrigatório")
     private Boolean ativo;
+    private String loginEmailGoogle;
+    private String loginEmailFaceBook;
+    private String loginEmailGitHub;
     @NotNull(message = "Campo obrigatório")
     private Set<Long> idsPerfis = new HashSet<>();
     private Endereco endereco;

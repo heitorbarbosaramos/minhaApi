@@ -1,0 +1,1 @@
+ALTER TABLE public.tb_usuario ADD login_google varchar NULL;

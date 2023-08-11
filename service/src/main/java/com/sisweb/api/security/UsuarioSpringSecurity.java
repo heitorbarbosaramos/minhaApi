@@ -45,6 +45,10 @@ public class UsuarioSpringSecurity implements UserDetails {
         return nome;
     }
 
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

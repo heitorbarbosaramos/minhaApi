@@ -40,6 +40,10 @@ public class UsuarioService {
         return repository.save(usuario);
     }
 
+    public Usuario findByLoginGoogle(String loginGoogle){
+        return repository.findByLoginEmailGoogle(loginGoogle);
+    }
+
     public Usuario findById(Long id){
 
         UsuarioSpringSecurity uss = UsuarioLogado.usuarioLogado();
@@ -69,7 +73,7 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO createUpdate(UsuarioFormDTO dto){
-        Endereco endereco = enderecoService.save(dto.getEndereco());
+        Endereco endereco = enderecoService.save(dto.getEndereco() == null ? new Endereco() : dto.getEndereco());
 
         Set<UsuarioPerfil> perfis = new HashSet<>();
         perfis = dto.getIdsPerfis().stream().map(item -> perfilService.findById(item)).collect(Collectors.toSet());

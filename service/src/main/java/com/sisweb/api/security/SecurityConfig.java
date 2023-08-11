@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,6 +37,9 @@ public class SecurityConfig {
     };
 
     private static String[] PUBLIC_MATCHERD_GET = {
+            "/login/**",
+            "/login/oauth2/code/google?",
+            "/loginSocial/oauth2/code/google**",
             "/actuator/info",
             "/usuario/geralinkrecuperasenha/*"
     };
@@ -49,9 +53,10 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+//                .and()
                 .build();
     }
 

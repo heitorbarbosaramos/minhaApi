@@ -30,6 +30,8 @@ public class Usuario {
     private Boolean ativo;
     @Column(name = "RECUPERA_SENHA")
     private Long timestampRecuperaSenha;
+    @Column(name = "LOGIN_GOOGLE")
+    private String loginEmailGoogle;
 
     @NotNull(message = "Campo obrigatório")
     @NotEmpty(message = "Campo obrigatório")

@@ -22,4 +22,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             " group by " +
             "   rol.id_perfil, per.nome", nativeQuery = true)
     List<String> perfilGroup();
+
+    Usuario findByLoginEmailGoogle(String loginGoogle);
 }
