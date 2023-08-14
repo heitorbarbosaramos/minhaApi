@@ -67,14 +67,16 @@ public class AutenticacaoSocialController {
     public String loginComGoogle(@AuthenticationPrincipal OidcUser principal, HttpServletRequest request, HttpServletResponse response){
 
         Usuario usuario = usuarioService.findByLoginGoogle(principal.getAttribute("email"));
+        UsuarioFormDTO dto = new UsuarioFormDTO();
+        UsuarioDTO usuarioDTO = null;
 
         if(usuario == null){
 
             Set<Long> idsPerfir = new HashSet<>();
             idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO.getCod())));
-            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO_FACEBOOK.getCod())));
+            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO_GOOGLE.getCod())));
 
-            UsuarioFormDTO dto = new UsuarioFormDTO();
+
             dto.setLogin(principal.getAttribute("email"));
             dto.setNome(principal.getAttribute("name"));
             dto.setAtivo(true);
@@ -82,9 +84,21 @@ public class AutenticacaoSocialController {
             dto.setIdsPerfis(idsPerfir);
             dto.setSenha(GeradorSenha.criar());
 
-            UsuarioDTO usuarioDTO = usuarioService.createUpdate(dto);
+            usuarioDTO = usuarioService.createUpdate(dto);
 
             usuario = usuarioMapper.toEntity(usuarioDTO);
+        }else {
+            UsuarioPerfil perfil = perfilService.findByPerfil(Perfil.ROLE_USUARIO_GOOGLE);
+            usuario.getPerfis().add(perfil);
+
+            dto = usuarioMapper.fromUsuario(usuario);
+            for(UsuarioPerfil x : usuario.getPerfis()){
+                dto.getIdsPerfis().add(x.getId());
+            }
+
+            dto.setLoginEmailGoogle(principal.getAttribute("email"));
+            dto.setUpdateSenha(false);
+            usuarioDTO = usuarioService.createUpdate(dto);
         }
 
         UsuarioSpringSecurity usuarioSpringSecurity = new UsuarioSpringSecurity(usuario.getId(), usuario.getLogin(), usuario.getSenha(), usuario.getNome(), usuario.getAtivo(), usuario.getPerfis() );
