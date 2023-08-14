@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }) => {
 
 
     const logout = () => {
-        logado = false;
+        
         console.log("LOGOUT");
         localStorage.removeItem("myApiLogin")
         localStorage.removeItem("myApiNome")
@@ -111,7 +111,8 @@ export const AuthProvider = ({ children }) => {
         Cookies.remove('JSESSIONID')
         ApiService.get("/rest/login/logout").catch(error => {console.error(error)});
         setUser(null);
-        navigate("/login?logout")
+        logado = false;
+        navigate("/")
     }
 
     console.log(user);
