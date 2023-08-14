@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     const loginSocial = (social) => {
-        const url = process.env.REACT_APP_API_BASE_URL_LOCAL+`/rest/oauth2/authorization/${social}`;
+        const url = process.env.REACT_APP_API_BASE_URL+`/rest/oauth2/authorization/${social}`;
         window.open(url, "_self");
     }
 

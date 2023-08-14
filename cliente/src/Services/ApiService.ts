@@ -2,12 +2,7 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 
 let baseURL: any;
-
-switch (window.location.origin) {
-  case "http://localhost:3000":
-    baseURL = process.env.REACT_APP_API_BASE_URL_LOCAL;
-    break;
-}
+baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const ApiService = axios.create({
   baseURL
