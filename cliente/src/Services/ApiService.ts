@@ -35,7 +35,6 @@ ApiService.interceptors.response.use(
     const JSESSIONID = Cookies.get("JSESSIONID");
 
     if (JSESSIONID) {
-      alert(JSESSIONID);
       response.headers.Authorization = `JSESSIONID ${JSESSIONID}`
     }
 

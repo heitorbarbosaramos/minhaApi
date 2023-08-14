@@ -19,6 +19,7 @@ public class UsuarioFormDTO {
     @Email(message = "Não é um email valido")
     private String login;
     private String senha;
+    private Boolean updateSenha;
     @NotEmpty(message = "Campo obrigatório")
     private String nome;
     @NotNull(message = "Campo obrigatório")
@@ -26,6 +27,7 @@ public class UsuarioFormDTO {
     private String loginEmailGoogle;
     private String loginEmailFaceBook;
     private String loginEmailGitHub;
+    private String loginGitHub;
     @NotNull(message = "Campo obrigatório")
     private Set<Long> idsPerfis = new HashSet<>();
     private Endereco endereco;

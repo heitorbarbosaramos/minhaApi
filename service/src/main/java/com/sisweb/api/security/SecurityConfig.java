@@ -40,6 +40,7 @@ public class SecurityConfig {
             "/login/**",
             "/login/oauth2/code/google?",
             "/loginSocial/oauth2/code/google**",
+            "/loginSocial/oauth2/code/github**",
             "/actuator/info",
             "/usuario/geralinkrecuperasenha/*"
     };

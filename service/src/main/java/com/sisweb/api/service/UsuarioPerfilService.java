@@ -2,6 +2,7 @@ package com.sisweb.api.service;
 
 import com.sisweb.api.entity.UsuarioPerfil;
 import com.sisweb.api.entity.dto.UsuarioPerfilDTO;
+import com.sisweb.api.enumeration.Perfil;
 import com.sisweb.api.mapper.UsuarioPerfilMapper;
 import com.sisweb.api.repository.UsuarioPerfilRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,10 @@ public class UsuarioPerfilService {
 
     public UsuarioPerfil findById(Long id){
         return repository.findById(id).orElseThrow(()-> new NoSuchElementException("Perfil não exite"));
+    }
+
+    public UsuarioPerfil findByPerfil(Perfil perfil){
+        return repository.findByPerfil(perfil);
     }
 
     public UsuarioPerfilDTO findByIdDTO(Long id){

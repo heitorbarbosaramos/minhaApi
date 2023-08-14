@@ -19,6 +19,9 @@ public class UsuarioDTO {
     private String senha;
     private String nome;
     private Boolean ativo;
+    private String loginEmailGoogle;
+    private String loginEmailGitHub;
+    private String loginGitHub;
 
     private Set<UsuarioPerfil> perfis = new HashSet<>();
     private Endereco endereco;

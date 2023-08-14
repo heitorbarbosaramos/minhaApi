@@ -1,10 +1,6 @@
 package com.sisweb.api.security;
 
-import com.sisweb.api.entity.Usuario;
-import com.sisweb.api.entity.dto.UsuarioFormDTO;
-import com.sisweb.api.enumeration.Perfil;
 import com.sisweb.api.service.UsuarioService;
-import com.sisweb.api.service.util.GeradorSenha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 

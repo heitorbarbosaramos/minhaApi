@@ -44,6 +44,10 @@ public class UsuarioService {
         return repository.findByLoginEmailGoogle(loginGoogle);
     }
 
+    public Usuario findByLoginGitHub(String loginEmailGitHub, String loginGitHub, String name){
+        return repository.findByLoginEmailGitHubOrLoginGitHubOrNome(loginEmailGitHub, loginGitHub, name);
+    }
+
     public Usuario findById(Long id){
 
         UsuarioSpringSecurity uss = UsuarioLogado.usuarioLogado();
@@ -78,10 +82,12 @@ public class UsuarioService {
         Set<UsuarioPerfil> perfis = new HashSet<>();
         perfis = dto.getIdsPerfis().stream().map(item -> perfilService.findById(item)).collect(Collectors.toSet());
 
-        if(!dto.getSenha().isEmpty()) {
-            dto.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
-        }else {
-            dto.setSenha(findById(dto.getId()).getSenha());
+        if(dto.getUpdateSenha()) {
+            if (!dto.getSenha().isEmpty()) {
+                dto.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
+            } else {
+                dto.setSenha(findById(dto.getId()).getSenha());
+            }
         }
 
         Usuario usuario = mapper.fromFormDTO(dto);

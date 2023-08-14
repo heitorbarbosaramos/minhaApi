@@ -32,6 +32,10 @@ public class Usuario {
     private Long timestampRecuperaSenha;
     @Column(name = "LOGIN_GOOGLE")
     private String loginEmailGoogle;
+    @Column(name = "LOGIN_EMAIL_GIT_HUB")
+    private String loginEmailGitHub;
+    @Column(name = "LOGIN_GIT_HUB")
+    private String loginGitHub;
 
     @NotNull(message = "Campo obrigatório")
     @NotEmpty(message = "Campo obrigatório")

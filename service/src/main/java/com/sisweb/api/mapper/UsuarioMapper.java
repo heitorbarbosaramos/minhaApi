@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {Usuario.class, UsuarioFormDTO.class, Endereco.class, UsuarioResetaSenhaDTO.class})
 public interface UsuarioMapper {
 
+    @Mapping(target = "dto.updateSenha", ignore = true)
     Usuario fromFormDTO(UsuarioFormDTO dto);
 
     UsuarioDTO toDTO(Usuario entity);
@@ -18,4 +19,6 @@ public interface UsuarioMapper {
     Usuario toEntity(UsuarioDTO dto);
 
     UsuarioResetaSenhaDTO toDTOResetaSenha(Usuario entity);
+
+    UsuarioFormDTO fromUsuario(Usuario usuario);
 }
