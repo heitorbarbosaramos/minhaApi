@@ -26,4 +26,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Usuario findByLoginEmailGoogle(String loginGoogle);
 
     Usuario findByLoginEmailGitHubOrLoginGitHubOrNome(String loginEmailGitHub, String loginGitHub, String name);
+
+    Usuario findByLoginOrLoginEmailFaceBook(String login, String loginFacebook);
 }

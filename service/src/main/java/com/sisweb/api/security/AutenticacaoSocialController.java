@@ -6,7 +6,11 @@ import com.sisweb.api.entity.dto.UsuarioDTO;
 import com.sisweb.api.entity.dto.UsuarioFormDTO;
 import com.sisweb.api.enumeration.Perfil;
 import com.sisweb.api.mapper.UsuarioMapper;
+import com.sisweb.api.security.dto.FacebookGetTokenDTO;
+import com.sisweb.api.security.dto.FacebookTokenDTO;
+import com.sisweb.api.security.dto.FacebookUserDetailsDTO;
 import com.sisweb.api.security.dto.GitHubUserDetailsDTO;
+import com.sisweb.api.security.feign.FacebookCliente;
 import com.sisweb.api.security.feign.GitHubCliente;
 import com.sisweb.api.service.UsuarioPerfilService;
 import com.sisweb.api.service.UsuarioService;
@@ -43,6 +47,7 @@ public class AutenticacaoSocialController {
     private final UsuarioMapper usuarioMapper;
     private final GitHubCliente gitHubCliente;
     private final UsuarioPerfilService perfilService;
+    private final FacebookCliente facebookCliente;
 
     @Value("${config.jwt.secret}")
     private String secreto;
@@ -51,6 +56,12 @@ public class AutenticacaoSocialController {
     private String gitHubId;
     @Value("${SSO_GITHUB_SECRET}")
     private String gitHubSecret;
+    @Value("${SSO_FACEBOOK_ID}")
+    private String facebookId;
+    @Value("${SSO_FACEBOOK_SECRET}")
+    private String facebookSecret;
+    @Value("${spring.security.oauth2.client.registration.facebook.redirect-uri}")
+    private String facebookRedirect;
 
     @GetMapping("/oauth2/code/google")
     public String loginComGoogle(@AuthenticationPrincipal OidcUser principal, HttpServletRequest request, HttpServletResponse response){
@@ -250,5 +261,106 @@ public class AutenticacaoSocialController {
         autenticacaoController.efetuarLogin(request, response, loginDTO);
 
         return "Hello, " + code;
+    }
+
+    @GetMapping("/oauth2/code/facebook")
+    public String loginComFacebook(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response){
+
+        log.info("CODE FACEBOOK {}", code);
+
+        FacebookGetTokenDTO getTokenDTO = new FacebookGetTokenDTO();
+        getTokenDTO.setClient_id(facebookId);
+        getTokenDTO.setClient_secret(facebookSecret);
+        getTokenDTO.setRedirect_uri(facebookRedirect);
+        getTokenDTO.setCode(code);
+
+        FacebookTokenDTO facebookTokenDTO = facebookCliente.getToken(getTokenDTO);
+
+        FacebookUserDetailsDTO facebookUserDetailsDTO = facebookCliente.getFacebookUserDetails(facebookTokenDTO.getAccess_token());
+
+        Usuario usuario = usuarioService.findByLoginFacebook(facebookUserDetailsDTO.getEmail());
+
+        UsuarioFormDTO dto = new UsuarioFormDTO();
+        UsuarioDTO usuarioDTO = null;
+
+        if(usuario == null){
+
+            Set<Long> idsPerfir = new HashSet<>();
+            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO.getCod())));
+            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO_FACEBOOK.getCod())));
+
+            dto.setLogin(facebookUserDetailsDTO.getEmail());
+            dto.setNome(facebookUserDetailsDTO.getName());
+            dto.setAtivo(true);
+            dto.setIdsPerfis(idsPerfir);
+            dto.setSenha(GeradorSenha.criar());
+
+            usuarioDTO = usuarioService.createUpdate(dto);
+
+            usuario = usuarioMapper.toEntity(usuarioDTO);
+        }else {
+            UsuarioPerfil perfil = perfilService.findByPerfil(Perfil.ROLE_USUARIO_FACEBOOK);
+            usuario.getPerfis().add(perfil);
+
+            dto = usuarioMapper.fromUsuario(usuario);
+            for(UsuarioPerfil x : usuario.getPerfis()){
+                dto.getIdsPerfis().add(x.getId());
+            }
+
+            dto.setLoginEmailFaceBook(facebookUserDetailsDTO.getEmail());
+            dto.setUpdateSenha(false);
+            usuarioDTO = usuarioService.createUpdate(dto);
+        }
+
+        UsuarioSpringSecurity usuarioSpringSecurity = new UsuarioSpringSecurity(usuario.getId(), usuario.getLogin(), usuario.getSenha(), usuario.getNome(), usuario.getAtivo(), usuario.getPerfis() );
+
+        Authentication authentication = new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return usuarioSpringSecurity.getAuthorities();
+            }
+
+            @Override
+            public Object getCredentials() {
+                return usuarioSpringSecurity.getLogin();
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return usuarioSpringSecurity.getAuthorities();
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return usuarioSpringSecurity.getAtivo();
+            }
+
+            @Override
+            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+            }
+
+            @Override
+            public String getName() {
+                return usuarioSpringSecurity.getNome();
+            }
+        };
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setLogin(usuario.getLogin());
+        loginDTO.setSocial(authentication);
+        loginDTO.setSocialUss(usuarioSpringSecurity);
+
+        log.info("AUTENTICACAO COM O GITHUB {} -  {} - {}", usuarioDTO.getLogin(), usuarioDTO.getLoginEmailGitHub(), usuarioDTO.getLoginGitHub());
+
+        autenticacaoController.efetuarLogin(request, response, loginDTO);
+
+
+        return code;
     }
 }

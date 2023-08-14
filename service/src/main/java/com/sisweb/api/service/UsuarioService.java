@@ -48,6 +48,10 @@ public class UsuarioService {
         return repository.findByLoginEmailGitHubOrLoginGitHubOrNome(loginEmailGitHub, loginGitHub, name);
     }
 
+    public Usuario findByLoginFacebook(String loginFacebook){
+        return repository.findByLoginOrLoginEmailFaceBook(loginFacebook, loginFacebook);
+    }
+
     public Usuario findById(Long id){
 
         UsuarioSpringSecurity uss = UsuarioLogado.usuarioLogado();

@@ -22,6 +22,7 @@ public class UsuarioDTO {
     private String loginEmailGoogle;
     private String loginEmailGitHub;
     private String loginGitHub;
+    private String loginEmailFaceBook;
 
     private Set<UsuarioPerfil> perfis = new HashSet<>();
     private Endereco endereco;

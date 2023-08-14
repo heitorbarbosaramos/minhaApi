@@ -36,6 +36,8 @@ public class Usuario {
     private String loginEmailGitHub;
     @Column(name = "LOGIN_GIT_HUB")
     private String loginGitHub;
+    @Column(name = "LOGIN_EMAIL_FACEBOOK")
+    private String loginEmailFaceBook;
 
     @NotNull(message = "Campo obrigatório")
     @NotEmpty(message = "Campo obrigatório")
