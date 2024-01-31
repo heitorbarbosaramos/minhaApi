@@ -83,6 +83,7 @@ public class AutenticacaoSocialController {
             dto.setLoginEmailGoogle(principal.getAttribute("email"));
             dto.setIdsPerfis(idsPerfir);
             dto.setSenha(GeradorSenha.criar());
+            dto.setUpdateSenha(true);
 
             usuarioDTO = usuarioService.createUpdate(dto);
 
@@ -207,6 +208,7 @@ public class AutenticacaoSocialController {
             dto.setAtivo(true);
             dto.setIdsPerfis(idsPerfir);
             dto.setSenha(GeradorSenha.criar());
+            dto.setUpdateSenha(true);
 
             usuarioDTO = usuarioService.createUpdate(dto);
 
@@ -308,6 +310,7 @@ public class AutenticacaoSocialController {
             dto.setAtivo(true);
             dto.setIdsPerfis(idsPerfir);
             dto.setSenha(GeradorSenha.criar());
+            dto.setUpdateSenha(true);
 
             usuarioDTO = usuarioService.createUpdate(dto);
 
