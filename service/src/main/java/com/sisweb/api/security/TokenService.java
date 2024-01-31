@@ -27,6 +27,7 @@ public class TokenService {
                     .withSubject(usuario.getLogin())
                     .withExpiresAt(LocalDateTime.now().plusDays(expiracao).toInstant(ZoneOffset.of("-03:00")))
                     .withClaim("id", usuario.getId().toString())
+                    .withClaim("nome", usuario.getNome())
                     .sign(algorithm);
         } catch (JWTCreationException e){
             throw  new RuntimeException("Erro ao criar o token ", e);
