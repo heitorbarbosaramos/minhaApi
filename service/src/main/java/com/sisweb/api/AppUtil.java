@@ -45,7 +45,7 @@ public class AppUtil {
             log.warn("The host name could not be determined, using `localhost` as fallback", var7);
         }
 
-        log.info("\n----------------------------------------------------------\n\tApplication '{}' is running! Access URLs:\n\tLocal: \t\t{}://localhost:{}{}\n\tExternal: \t{}://{}:{}{}\n\tSystem: \t{}\n\tProfile(s): \t{}\n----------------------------------------------------------", new Object[]{env.getProperty("spring.application.name"), protocol, serverPort, contextPath, protocol, hostAddress, serverPort, contextPath,env.getProperty("bucket.front.url"), env.getActiveProfiles()});
+        log.info("\n----------------------------------------------------------\n\tApplication '{}' is running! Access URLs:\n\tLocal: \t\t{}://localhost:{}{}\n\tExternal: \t{}://{}:{}{}\n\tSystem: \t{}\n\tSwagger: \t{}://localhost:{}{}/swagger-ui/index.html\n\tProfile(s): \t{}\n----------------------------------------------------------", new Object[]{env.getProperty("spring.application.name"), protocol, serverPort, contextPath, protocol, hostAddress, serverPort, contextPath,env.getProperty("bucket.front.url"), protocol, serverPort, contextPath, env.getActiveProfiles()});
         String configServerStatus = env.getProperty("configserver.status");
         if (configServerStatus == null) {
             configServerStatus = "Not found or not setup for this application";
