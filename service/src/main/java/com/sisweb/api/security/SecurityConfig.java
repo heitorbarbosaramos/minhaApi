@@ -43,7 +43,9 @@ public class SecurityConfig {
             "/loginSocial/oauth2/code/github**",
             "/loginSocial/oauth2/code/facebook**",
             "/actuator/info",
-            "/usuario/geralinkrecuperasenha/*"
+            "/usuario/geralinkrecuperasenha/*",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
     };
 
     @Bean

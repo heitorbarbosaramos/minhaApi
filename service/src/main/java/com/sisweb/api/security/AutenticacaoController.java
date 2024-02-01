@@ -1,6 +1,8 @@
 package com.sisweb.api.security;
 
 import com.sisweb.api.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +38,9 @@ public class AutenticacaoController {
     private CookieService cookieService;
 
     @PostMapping
+    @Operation(tags = {"Autenticacao"}, summary = "Realizar login através de um usuário e senha",
+            description = "Requisição POST para Realizar login através de um usuário e senha", security = {@SecurityRequirement(name = "Bearer")}
+    )
     public ResponseEntity efetuarLogin(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid LoginDTO dto){
         log.info("REQUISICAO POST PARA REALIZAR LOGIN {} {}", dto.getLogin(), dto.getSenha());
 
