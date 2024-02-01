@@ -18,16 +18,20 @@ public class TokenService {
     @Value("${config.jwt.expiration}")
     private Long expiracao;
 
+    @Value("${spring.application.name}")
+    private String nomeApi;
+
     public String gerarToken(UsuarioSpringSecurity usuario){
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(secreto);
             return JWT.create()
-                    .withIssuer("Minha Api")
+                    .withIssuer(nomeApi)
                     .withSubject(usuario.getLogin())
                     .withExpiresAt(LocalDateTime.now().plusDays(expiracao).toInstant(ZoneOffset.of("-03:00")))
                     .withClaim("id", usuario.getId().toString())
                     .withClaim("nome", usuario.getNome())
+                    .withClaim("perfis", usuario.findPerfisString())
                     .sign(algorithm);
         } catch (JWTCreationException e){
             throw  new RuntimeException("Erro ao criar o token ", e);
@@ -39,7 +43,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secreto);
             return JWT.require(algorithm)
                     // specify an specific claim validations
-                    .withIssuer("Minha Api")
+                    .withIssuer(nomeApi)
                     // reusable verifier instance
                     .build()
                     .verify(tokenJWT)

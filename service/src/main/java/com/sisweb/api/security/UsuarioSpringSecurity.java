@@ -89,4 +89,13 @@ public class UsuarioSpringSecurity implements UserDetails {
         return getAuthorities().contains(new SimpleGrantedAuthority(perfil.name())) ? true : false;
 
     }
+
+    public String findPerfisString(){
+        String perfis = "";
+        for(GrantedAuthority x : this.authorities){
+            perfis += x.getAuthority() + " - ";
+        }
+        perfis = perfis.substring(0, perfis.length()-3);
+        return perfis;
+    }
 }
