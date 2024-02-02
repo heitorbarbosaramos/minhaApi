@@ -67,88 +67,8 @@ public class AutenticacaoSocialController {
     public String loginComGoogle(@AuthenticationPrincipal OidcUser principal, HttpServletRequest request, HttpServletResponse response){
 
         Usuario usuario = usuarioService.findByLoginGoogle(principal.getAttribute("email"));
-        UsuarioFormDTO dto = new UsuarioFormDTO();
-        UsuarioDTO usuarioDTO = null;
 
-        if(usuario == null){
-
-            Set<Long> idsPerfir = new HashSet<>();
-            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO.getCod())));
-            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO_GOOGLE.getCod())));
-
-
-            dto.setLogin(principal.getAttribute("email"));
-            dto.setNome(principal.getAttribute("name"));
-            dto.setAtivo(true);
-            dto.setLoginEmailGoogle(principal.getAttribute("email"));
-            dto.setIdsPerfis(idsPerfir);
-            dto.setSenha(GeradorSenha.criar());
-            dto.setUpdateSenha(true);
-
-            usuarioDTO = usuarioService.createUpdate(dto);
-
-            usuario = usuarioMapper.toEntity(usuarioDTO);
-        }else {
-            UsuarioPerfil perfil = perfilService.findByPerfil(Perfil.ROLE_USUARIO_GOOGLE);
-            usuario.getPerfis().add(perfil);
-
-            dto = usuarioMapper.fromUsuario(usuario);
-            for(UsuarioPerfil x : usuario.getPerfis()){
-                dto.getIdsPerfis().add(x.getId());
-            }
-
-            dto.setLoginEmailGoogle(principal.getAttribute("email"));
-            dto.setUpdateSenha(false);
-            usuarioDTO = usuarioService.createUpdate(dto);
-        }
-
-        UsuarioSpringSecurity usuarioSpringSecurity = new UsuarioSpringSecurity(usuario.getId(), usuario.getLogin(), usuario.getSenha(), usuario.getNome(), usuario.getAtivo(), usuario.getPerfis() );
-
-        Authentication authentication = new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return usuarioSpringSecurity.getAuthorities();
-            }
-
-            @Override
-            public Object getCredentials() {
-                return usuarioSpringSecurity.getLogin();
-            }
-
-            @Override
-            public Object getDetails() {
-                return null;
-            }
-
-            @Override
-            public Object getPrincipal() {
-                return usuarioSpringSecurity.getAuthorities();
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return usuarioSpringSecurity.getAtivo();
-            }
-
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-            }
-
-            @Override
-            public String getName() {
-                return usuarioSpringSecurity.getNome();
-            }
-        };
-
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setLogin(usuario.getLogin());
-        loginDTO.setSocial(authentication);
-        loginDTO.setSocialUss(usuarioSpringSecurity);
-
-        log.info("AUTENTICACAO COM O GOOLE {} - {} -  {} - {}", principal, principal.getAttribute("email"), principal.getAuthorities(), principal.getIdToken().getTokenValue());
-
-        autenticacaoController.efetuarLogin(request, response, loginDTO);
+        efetuarLoginSocial(usuario, Perfil.ROLE_USUARIO_GOOGLE, null, null, principal, request, response);
 
         return String.format("=>PRINCIPAL: %s " +
                 "\n => Nome: %s" +
@@ -193,90 +113,8 @@ public class AutenticacaoSocialController {
 
         Usuario usuario = usuarioService.findByLoginGitHub(gitUserDTO.getEmail(), gitUserDTO.getLogin(), gitUserDTO.getName());
 
-        UsuarioFormDTO dto = new UsuarioFormDTO();
-        UsuarioDTO usuarioDTO = null;
-
-        if(usuario == null){
-
-            Set<Long> idsPerfir = new HashSet<>();
-            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO.getCod())));
-            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO_GOOGLE.getCod())));
-
-            dto.setLogin(gitUserDTO.getEmail());
-            dto.setLoginGitHub(gitUserDTO.getLogin());
-            dto.setNome(gitUserDTO.getName());
-            dto.setAtivo(true);
-            dto.setIdsPerfis(idsPerfir);
-            dto.setSenha(GeradorSenha.criar());
-            dto.setUpdateSenha(true);
-
-            usuarioDTO = usuarioService.createUpdate(dto);
-
-            usuario = usuarioMapper.toEntity(usuarioDTO);
-        }else {
-            UsuarioPerfil perfil = perfilService.findByPerfil(Perfil.ROLE_USUARIO_GITHUB);
-            usuario.getPerfis().add(perfil);
-
-            dto = usuarioMapper.fromUsuario(usuario);
-            for(UsuarioPerfil x : usuario.getPerfis()){
-                dto.getIdsPerfis().add(x.getId());
-            }
-
-            dto.setLoginGitHub(gitUserDTO.getLogin());
-            dto.setLoginEmailGitHub(gitUserDTO.getEmail());
-            dto.setUpdateSenha(false);
-            usuarioDTO = usuarioService.createUpdate(dto);
-        }
-
-        UsuarioSpringSecurity usuarioSpringSecurity = new UsuarioSpringSecurity(usuario.getId(), usuario.getLogin(), usuario.getSenha(), usuario.getNome(), usuario.getAtivo(), usuario.getPerfis() );
-
-        Authentication authentication = new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return usuarioSpringSecurity.getAuthorities();
-            }
-
-            @Override
-            public Object getCredentials() {
-                return usuarioSpringSecurity.getLogin();
-            }
-
-            @Override
-            public Object getDetails() {
-                return null;
-            }
-
-            @Override
-            public Object getPrincipal() {
-                return usuarioSpringSecurity.getAuthorities();
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return usuarioSpringSecurity.getAtivo();
-            }
-
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-            }
-
-            @Override
-            public String getName() {
-                return usuarioSpringSecurity.getNome();
-            }
-        };
-
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setLogin(usuario.getLogin());
-        loginDTO.setSocial(authentication);
-        loginDTO.setSocialUss(usuarioSpringSecurity);
-
-        log.info("AUTENTICACAO COM O GITHUB {} -  {} - {}", usuarioDTO.getLogin(), usuarioDTO.getLoginEmailGitHub(), usuarioDTO.getLoginGitHub());
-
-        autenticacaoController.efetuarLogin(request, response, loginDTO);
-
-        return "Hello, " + code;
+        efetuarLoginSocial(usuario, Perfil.ROLE_USUARIO_GITHUB,null,gitUserDTO, null, request, response);
+        return "CODE: " + code;
     }
 
     @GetMapping("/oauth2/code/facebook")
@@ -296,17 +134,51 @@ public class AutenticacaoSocialController {
 
         Usuario usuario = usuarioService.findByLoginFacebook(facebookUserDetailsDTO.getEmail());
 
+        efetuarLoginSocial(usuario, Perfil.ROLE_USUARIO_FACEBOOK, facebookUserDetailsDTO, null,null, request, response);
+        return "FACEBOOK: " + code;
+    }
+
+    private void efetuarLoginSocial(Usuario usuario, Perfil perfil, FacebookUserDetailsDTO facebookUserDetailsDTO,GitHubUserDetailsDTO gitUserDTO, OidcUser googleUser,  HttpServletRequest request, HttpServletResponse response){
+        
         UsuarioFormDTO dto = new UsuarioFormDTO();
+        dto.setUpdateSenha(false);
+
         UsuarioDTO usuarioDTO = null;
+
+        String login = null;
+        String nome = null;
+
+        if(facebookUserDetailsDTO != null){
+
+            login = facebookUserDetailsDTO.getEmail();
+            nome = facebookUserDetailsDTO.getName();
+            dto.setLoginEmailFaceBook(facebookUserDetailsDTO.getEmail());
+            usuario.setLoginEmailFaceBook(login);
+
+        } else if (gitUserDTO != null) {
+
+            login = gitUserDTO.getEmail();
+            nome = gitUserDTO.getName();
+            dto.setLoginGitHub(gitUserDTO.getLogin());
+            dto.setLoginEmailGitHub(gitUserDTO.getEmail());
+            usuario.setLoginGitHub(gitUserDTO.getLogin());
+
+        } else if (googleUser != null) {
+
+            login = googleUser.getAttribute("email");
+            nome = googleUser.getAttribute("name");
+            dto.setLoginEmailGoogle(googleUser.getAttribute("email"));
+            usuario.setLoginEmailGoogle(login);
+        }
 
         if(usuario == null){
 
             Set<Long> idsPerfir = new HashSet<>();
             idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO.getCod())));
-            idsPerfir.add( Long.parseLong(String.valueOf(Perfil.ROLE_USUARIO_FACEBOOK.getCod())));
+            idsPerfir.add( Long.parseLong(String.valueOf(perfil.getCod())));
 
-            dto.setLogin(facebookUserDetailsDTO.getEmail());
-            dto.setNome(facebookUserDetailsDTO.getName());
+            dto.setLogin(login);
+            dto.setNome(nome);
             dto.setAtivo(true);
             dto.setIdsPerfis(idsPerfir);
             dto.setSenha(GeradorSenha.criar());
@@ -316,15 +188,16 @@ public class AutenticacaoSocialController {
 
             usuario = usuarioMapper.toEntity(usuarioDTO);
         }else {
-            UsuarioPerfil perfil = perfilService.findByPerfil(Perfil.ROLE_USUARIO_FACEBOOK);
-            usuario.getPerfis().add(perfil);
+            UsuarioPerfil perfilUsuario = perfilService.findByPerfil(perfil);
+
+            dto.getIdsPerfis().add(perfilUsuario.getId());
+            usuario.getPerfis().add(perfilUsuario);
 
             dto = usuarioMapper.fromUsuario(usuario);
             for(UsuarioPerfil x : usuario.getPerfis()){
                 dto.getIdsPerfis().add(x.getId());
             }
 
-            dto.setLoginEmailFaceBook(facebookUserDetailsDTO.getEmail());
             dto.setUpdateSenha(false);
             usuarioDTO = usuarioService.createUpdate(dto);
         }
@@ -373,11 +246,8 @@ public class AutenticacaoSocialController {
         loginDTO.setSocial(authentication);
         loginDTO.setSocialUss(usuarioSpringSecurity);
 
-        log.info("AUTENTICACAO COM O GITHUB {} -  {} - {}", usuarioDTO.getLogin(), usuarioDTO.getLoginEmailGitHub(), usuarioDTO.getLoginGitHub());
+        log.info("AUTENTICACAO COM {}", perfil.getDescricao());
 
         autenticacaoController.efetuarLogin(request, response, loginDTO);
-
-
-        return code;
     }
 }
