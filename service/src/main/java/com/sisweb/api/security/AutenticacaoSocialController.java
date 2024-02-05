@@ -6,26 +6,24 @@ import com.sisweb.api.entity.dto.UsuarioDTO;
 import com.sisweb.api.entity.dto.UsuarioFormDTO;
 import com.sisweb.api.enumeration.Perfil;
 import com.sisweb.api.mapper.UsuarioMapper;
-import com.sisweb.api.security.dto.FacebookGetTokenDTO;
-import com.sisweb.api.security.dto.FacebookTokenDTO;
-import com.sisweb.api.security.dto.FacebookUserDetailsDTO;
-import com.sisweb.api.security.dto.GitHubUserDetailsDTO;
+import com.sisweb.api.security.dto.*;
 import com.sisweb.api.security.feign.FacebookCliente;
 import com.sisweb.api.security.feign.GitHubCliente;
+import com.sisweb.api.security.feign.GoogleApisCliente;
+import com.sisweb.api.security.feign.GoogleTokenCliente;
 import com.sisweb.api.service.UsuarioPerfilService;
 import com.sisweb.api.service.UsuarioService;
 import com.sisweb.api.service.util.GeradorSenha;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,10 +46,18 @@ public class AutenticacaoSocialController {
     private final GitHubCliente gitHubCliente;
     private final UsuarioPerfilService perfilService;
     private final FacebookCliente facebookCliente;
+    private final GoogleTokenCliente googleTokenCliente;
+    private final GoogleApisCliente googleApisCliente;
 
     @Value("${config.jwt.secret}")
     private String secreto;
 
+    @Value("${SSO_GOOGLE_ID}")
+    private String googleId;
+    @Value("${SSO_GOOGLE_SECRET}")
+    private String googleSecret;
+    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    private String googleRedrect;
     @Value("${SSO_GITHUB_ID}")
     private String gitHubId;
     @Value("${SSO_GITHUB_SECRET}")
@@ -64,19 +70,25 @@ public class AutenticacaoSocialController {
     private String facebookRedirect;
 
     @GetMapping("/oauth2/code/google")
-    public String loginComGoogle(@AuthenticationPrincipal OidcUser principal, HttpServletRequest request, HttpServletResponse response){
+    public String loginComGoogle(@Param("code") String code, HttpServletRequest request, HttpServletResponse response){
 
-        Usuario usuario = usuarioService.findByLoginGoogle(principal.getAttribute("email"));
+        GoogleTokenDTO tokenDTO = new GoogleTokenDTO(code, googleId, googleSecret, googleRedrect,"authorization_code", "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid");
 
-        efetuarLoginSocial(usuario, Perfil.ROLE_USUARIO_GOOGLE, null, null, principal, request, response);
+        GoogleAcessTokenDTO token = googleTokenCliente.getGoogleToken(tokenDTO);
+        GoogleUserDetailsDTO userInfo = googleApisCliente.getUserInfo(token.getAccess_token());
 
-        return String.format("=>PRINCIPAL: %s " +
-                "\n => Nome: %s" +
-                "\n => Email: %s ",
-                principal,
-                principal.getAttribute("name"),
-                principal.getAttribute("email")
-                );
+        Usuario usuario = usuarioService.findByLoginGoogle(userInfo.getEmail());
+
+        efetuarLoginSocial(usuario, Perfil.ROLE_USUARIO_GOOGLE, null, null, userInfo, request, response);
+//
+//        return String.format("=>PRINCIPAL: %s " +
+//                "\n => Nome: %s" +
+//                "\n => Email: %s ",
+//                principal,
+//                principal.getAttribute("name"),
+//                principal.getAttribute("email")
+//                );
+        return "";
     }
 
     @GetMapping("/oauth2/code/github")
@@ -138,8 +150,12 @@ public class AutenticacaoSocialController {
         return "FACEBOOK: " + code;
     }
 
-    private void efetuarLoginSocial(Usuario usuario, Perfil perfil, FacebookUserDetailsDTO facebookUserDetailsDTO,GitHubUserDetailsDTO gitUserDTO, OidcUser googleUser,  HttpServletRequest request, HttpServletResponse response){
-        
+    private RuntimeException efetuarLoginSocial(Usuario usuario, Perfil perfil, FacebookUserDetailsDTO facebookUserDetailsDTO, GitHubUserDetailsDTO gitUserDTO, GoogleUserDetailsDTO googleUser, HttpServletRequest request, HttpServletResponse response){
+
+//        if(!usuario.getAtivo()){
+//            return new RuntimeException("Usuário desabilitado");
+//        }
+
         UsuarioFormDTO dto = new UsuarioFormDTO();
         dto.setUpdateSenha(false);
 
@@ -165,9 +181,9 @@ public class AutenticacaoSocialController {
 
         } else if (googleUser != null) {
 
-            login = googleUser.getAttribute("email");
-            nome = googleUser.getAttribute("name");
-            dto.setLoginEmailGoogle(googleUser.getAttribute("email"));
+            login = googleUser.getEmail();
+            nome = googleUser.getName();
+            dto.setLoginEmailGoogle(googleUser.getEmail());
             usuario.setLoginEmailGoogle(login);
         }
 
@@ -227,7 +243,7 @@ public class AutenticacaoSocialController {
 
             @Override
             public boolean isAuthenticated() {
-                return usuarioSpringSecurity.getAtivo();
+                return false;
             }
 
             @Override
@@ -249,5 +265,6 @@ public class AutenticacaoSocialController {
         log.info("AUTENTICACAO COM {}", perfil.getDescricao());
 
         autenticacaoController.efetuarLogin(request, response, loginDTO);
+        return null;
     }
 }
