@@ -32,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 @Slf4j
@@ -68,9 +69,11 @@ public class AutenticacaoSocialController {
     private String facebookSecret;
     @Value("${spring.security.oauth2.client.registration.facebook.redirect-uri}")
     private String facebookRedirect;
+    @Value("${app.sistema.uri}")
+    private String redirect;
 
     @GetMapping("/oauth2/code/google")
-    public String loginComGoogle(@Param("code") String code, HttpServletRequest request, HttpServletResponse response){
+    public String loginComGoogle(@Param("code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         GoogleTokenDTO tokenDTO = new GoogleTokenDTO(code, googleId, googleSecret, googleRedrect,"authorization_code", "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid");
 
@@ -92,7 +95,7 @@ public class AutenticacaoSocialController {
     }
 
     @GetMapping("/oauth2/code/github")
-    public String loginComGitHub(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response){
+    public String loginComGitHub(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -130,7 +133,7 @@ public class AutenticacaoSocialController {
     }
 
     @GetMapping("/oauth2/code/facebook")
-    public String loginComFacebook(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response){
+    public String loginComFacebook(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         log.info("CODE FACEBOOK {}", code);
 
@@ -150,11 +153,14 @@ public class AutenticacaoSocialController {
         return "FACEBOOK: " + code;
     }
 
-    private RuntimeException efetuarLoginSocial(Usuario usuario, Perfil perfil, FacebookUserDetailsDTO facebookUserDetailsDTO, GitHubUserDetailsDTO gitUserDTO, GoogleUserDetailsDTO googleUser, HttpServletRequest request, HttpServletResponse response){
+    private RuntimeException efetuarLoginSocial(Usuario usuario, Perfil perfil, FacebookUserDetailsDTO facebookUserDetailsDTO, GitHubUserDetailsDTO gitUserDTO, GoogleUserDetailsDTO googleUser, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-//        if(!usuario.getAtivo()){
-//            return new RuntimeException("Usuário desabilitado");
-//        }
+        if(!usuario.getAtivo()){
+            new RuntimeException("Usuário desabilitado");
+            response.setStatus(500);
+            response.setHeader("message:" , "Usuário desabilitado");
+            response.sendRedirect(redirect);
+        }
 
         UsuarioFormDTO dto = new UsuarioFormDTO();
         dto.setUpdateSenha(false);
